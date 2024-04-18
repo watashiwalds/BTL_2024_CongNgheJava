@@ -1,0 +1,3 @@
+next: finish PauseOverlay
+- separate VolumeControl from atlas image
+- create PauseButton and VolumeControl class
