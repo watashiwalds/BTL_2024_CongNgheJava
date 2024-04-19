@@ -199,7 +199,8 @@ public class Player extends Entity {
             if (state>=2 && state<=4) {
                 aniTickCount = 0;
                 aniIndex = 0;
-                setCooldown(1000); //special state receive cooldown
+                resetDirection();
+                setCooldown(500); //special state receive cooldown
             }
         } else {
             playerTempState = state;
@@ -285,16 +286,12 @@ public class Player extends Entity {
                 aniIndex = 0;
         }
     }
-    private void playSpecificAnimation(int aniID) {
-        aniTickCount = 0;
-        aniType = aniID;
-    }
 
     //handle player's heart
     public int getHeartCount() {return heartCount;}
     public void addHeartCount() {heartCount++;}
     private void beingDamaged() {
-        playSpecificAnimation(PlayerConstants.FIGHT_RECEIVE_DAMAGE);
+        setState(PlayerConstants.FIGHT_RECEIVE_DAMAGE);
         audioPlayer.playSFX(AudioPlayer.HURT);
         dmgReceiveOnCooldown = true;
         dmgRcvCdStart = System.currentTimeMillis();

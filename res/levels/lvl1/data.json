@@ -85,13 +85,7 @@
     {
       "cord": [22,31],
       "itemRequired" : -1,
-      "action" : "nextlevel",
-      "blockIDFollowed" : -1
-    },
-    {
-      "cord": [1,27],
-      "itemRequired" : -1,
-      "action" : "gameFinish",
+      "action" : "nextLevel",
       "blockIDFollowed" : -1
     },
     {

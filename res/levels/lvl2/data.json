@@ -107,7 +107,7 @@
     {
       "cord": [55,9],
       "itemRequired": -1,
-      "action": "gameFinish",
+      "action": "nextLevel",
       "blockIDFollowed": -1
     },
     {

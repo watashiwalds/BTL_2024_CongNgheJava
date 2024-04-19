@@ -110,6 +110,8 @@ public class LevelManager {
                     blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (int)(long)arr2.get(0), (int)(long)arr2.get(1), this, blockManager));
                 } else if (action.equalsIgnoreCase("dialogue")) {
                     blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (long)obj.get("duration"), (boolean)obj.get("removeAfterAction"), this, blockManager));
+                } else if (action.equalsIgnoreCase("giveItem")) {
+                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (int)(long)obj.get("giveItemID"), this, blockManager));
                 } else {
                     blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, this, blockManager));
                 }
@@ -152,10 +154,10 @@ public class LevelManager {
         }
 
         if (bae.getItemRequiredID() != -1 && inventory.getSlot(bae.getItemRequiredID()) > 0) {
-            inventory.useItem(bae.getItemRequiredID());
             int blockIDFollowed = bae.getBlockIDFollowed();
 
             if (action == 0) {
+                inventory.useItem(bae.getItemRequiredID());
                 gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.DOOROPEN);
 
                 //locked door open, straight edit to gradientMap and layerMap, got reset upon replay
@@ -175,10 +177,14 @@ public class LevelManager {
                     layerMap[yTile-i][xTile] = 0;
                     i++;
                 }
+
+                if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
             } else
 
             //mechanic-related that active when using item
             if (action == 1) {
+                inventory.useItem(bae.getItemRequiredID());
+
                 int actionXMap = bae.getActionXMap();
                 int actionYMap = bae.getActionYMap();
                 if (graphicMap[actionYMap][actionXMap] != 0) {
@@ -198,11 +204,19 @@ public class LevelManager {
                 }
                 graphicMap[actionYMap][actionXMap] = blockIDFollowed;
                 layerMap[actionYMap][actionXMap] = 1;
+
+                if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
+            }
+
+            //give item on comdition met
+            if (action == 5) {
+                inventory.putItem(bae.getItemIDToGive());
+
+                if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
             }
         } else {
             gsPlaying.getHud().showMessage(bae.getMessage());
         }
-        if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
     }
     public void itemPickup(ItemEntity iae) {
         gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.ITEM_PICKUP);

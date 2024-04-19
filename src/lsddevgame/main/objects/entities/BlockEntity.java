@@ -14,6 +14,7 @@ public class BlockEntity extends Entity {
     String message;
     private long messageDuration = 3000;
     private boolean removeAfterAction = true;
+    private int itemIDToGive;
 
 
 
@@ -40,13 +41,18 @@ public class BlockEntity extends Entity {
         this.messageDuration = duration;
         this.removeAfterAction = removeAfterAction;
     }
+    public BlockEntity(int id, int xTile, int yTile, int itemRequiredID, String action, int blockIDFollowed, String message, int giveItemID, LevelManager levelManager, BlockManager blockManager) {
+        this(id, xTile, yTile, itemRequiredID, action, blockIDFollowed, message, levelManager, blockManager);
+        this.itemIDToGive = giveItemID;
+    }
 
     private void defineAction(String actionInText) {
         if (actionInText.equalsIgnoreCase("disappear")) this.action = 0;
         if (actionInText.equalsIgnoreCase("appear")) this.action = 1;
         if (actionInText.equalsIgnoreCase("dialogue")) this.action = 2;
-        if (actionInText.equalsIgnoreCase("nextlevel")) this.action = 3;
+        if (actionInText.equalsIgnoreCase("nextLevel")) this.action = 3;
         if (actionInText.equalsIgnoreCase("gameFinish")) this.action = 4;
+        if (actionInText.equalsIgnoreCase("giveItem")) this.action = 5;
     }
 
     public void update(Rectangle2D.Float playerHitbox) {
@@ -89,5 +95,9 @@ public class BlockEntity extends Entity {
     }
     public boolean needRemoveAfterAction() {
         return removeAfterAction;
+    }
+
+    public int getItemIDToGive() {
+        return itemIDToGive;
     }
 }
