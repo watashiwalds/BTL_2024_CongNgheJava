@@ -5,16 +5,19 @@ import lsddevgame.main.objects.entities.BlockEntity;
 import lsddevgame.main.utils.ConstantValues;
 import lsddevgame.main.utils.LoadData;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class BlockManager {
+    private LevelManager levelManager;
     private BufferedImage atlas;
     private int blockTypes;
     private ArrayList<Block> blocklist = new ArrayList<>();
     private ArrayList<BlockEntity> blockEntities = new ArrayList<>();
 
-    public BlockManager(String imgScr, int blockTypes) {
+    public BlockManager(LevelManager levelManager, String imgScr, int blockTypes) {
+        this.levelManager = levelManager;
         atlas = LoadData.GetSpriteImage(imgScr);
         this.blockTypes = blockTypes;
         loadBlocks();
@@ -31,12 +34,20 @@ public class BlockManager {
         }
     }
 
+    public void update() {
+        for (int i=0; i<blockEntities.size(); i++) blockEntities.get(i).update(levelManager.getPlayer().getHitbox());
+    }
+
+    public void draw(Graphics g, int xLevelOffset, int yLevelOffset) {
+        for (BlockEntity bae : blockEntities) bae.draw(g, xLevelOffset, yLevelOffset);
+    }
+
     private BufferedImage getSprite(int atlasX, int atlasY) {
         return atlas.getSubimage(atlasX*16, atlasY*16, 16, 16);
     }
 
     public BufferedImage getBlockSprite(int id) {
-        if (id == ConstantValues.BlockIDs.AIR) return null;
+        if (id == 0) return null;
         return blocklist.get(id).getSprite();
     }
 

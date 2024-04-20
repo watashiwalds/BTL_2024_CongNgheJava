@@ -47,12 +47,12 @@ public class BlockEntity extends Entity {
     }
 
     private void defineAction(String actionInText) {
-        if (actionInText.equalsIgnoreCase("disappear")) this.action = 0;
-        if (actionInText.equalsIgnoreCase("appear")) this.action = 1;
-        if (actionInText.equalsIgnoreCase("dialogue")) this.action = 2;
-        if (actionInText.equalsIgnoreCase("nextLevel")) this.action = 3;
-        if (actionInText.equalsIgnoreCase("gameFinish")) this.action = 4;
-        if (actionInText.equalsIgnoreCase("giveItem")) this.action = 5;
+        if (actionInText.equalsIgnoreCase("disappear")) this.action = ConstantValues.BlockEntityAction.DISAPPEAR; else
+        if (actionInText.equalsIgnoreCase("appear")) this.action = ConstantValues.BlockEntityAction.APPEAR; else
+        if (actionInText.equalsIgnoreCase("dialogue")) this.action = ConstantValues.BlockEntityAction.DIALOGUE; else
+        if (actionInText.equalsIgnoreCase("giveItem")) this.action = ConstantValues.BlockEntityAction.GIVE_ITEM_CONDITION_MET; else
+        if (actionInText.equalsIgnoreCase("nextLevel")) this.action = ConstantValues.BlockEntityAction.NEXT_LEVEL; else
+        if (actionInText.equalsIgnoreCase("gameFinish")) this.action = ConstantValues.BlockEntityAction.GAME_FINISHED;
     }
 
     public void update(Rectangle2D.Float playerHitbox) {
