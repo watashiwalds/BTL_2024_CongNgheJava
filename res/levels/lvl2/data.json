@@ -144,5 +144,16 @@
       "id": 4,
       "cord": [23,23]
     }
+  ],
+
+  "npcAtlas": "/levels/lvl2/npcs.png",
+  "spriteCount": 3,
+  "npcs": [
+    {
+      "spriteID": 1,
+      "cord": [4, 30],
+      "haveDialogue": true,
+      "dialogueID": "no0"
+    }
   ]
 }
