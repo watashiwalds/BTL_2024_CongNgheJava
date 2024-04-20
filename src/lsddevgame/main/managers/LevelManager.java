@@ -4,8 +4,10 @@ import lsddevgame.main.audio.AudioPlayer;
 import lsddevgame.main.gamestates.Playing;
 import lsddevgame.main.mechanics.Inventory;
 import lsddevgame.main.objects.entities.BlockEntity;
+import lsddevgame.main.objects.entities.NPC;
 import lsddevgame.main.objects.entities.Player;
 import lsddevgame.main.objects.entities.ItemEntity;
+import lsddevgame.main.utils.ConstantValues;
 import lsddevgame.main.utils.LoadData;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -31,6 +33,7 @@ public class LevelManager {
     private BlockManager blockManager;
     private ItemManager itemManager;
     private Inventory inventory;
+    private NPCManager npcManager = null;
 
 
     public LevelManager(Playing gsPlaying) {
@@ -64,7 +67,7 @@ public class LevelManager {
 
             itemAtlas = (String)jsobj.get("itemAtlas");
             itemTypes = (int)(long)jsobj.get("itemTypes");
-            itemManager = new ItemManager(itemAtlas, itemTypes);
+            itemManager = new ItemManager(this, itemAtlas, itemTypes);
             inventory = new Inventory(itemTypes);
             jsarr = (JSONArray) jsobj.get("itemSpawns");
             for (int i=0; i<jsarr.size(); i++) {
@@ -77,7 +80,7 @@ public class LevelManager {
 
             blockAtlas = (String)jsobj.get("blockAtlas");
             blockTypes = (int)(long)jsobj.get("blockTypes");
-            blockManager = new BlockManager(blockAtlas, blockTypes);
+            blockManager = new BlockManager(this, blockAtlas, blockTypes);
 
             graphicMap = new int[mapH][mapW];
             jsarr = (JSONArray) jsobj.get("graphicMap");
@@ -116,6 +119,17 @@ public class LevelManager {
                     blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, this, blockManager));
                 }
             }
+
+            if (jsobj.containsKey("npcs")) {
+                npcManager = new NPCManager(this);
+
+                jsarr = (JSONArray) jsobj.get("npcs");
+                for (int i=0; i<jsarr.size(); i++) {
+                    JSONObject obj = (JSONObject) jsarr.get(i);
+                    JSONArray arr = (JSONArray) obj.get("cord");
+                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String)jsobj.get("npcAtlas"), 16, 16, (int)(long)obj.get("spriteID")), (int)(long)arr.get(0), (int)(long)arr.get(1), this));
+                }
+            }
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -123,8 +137,9 @@ public class LevelManager {
 
     public void update() {
         if (!player.checkIfAlive()) gsPlaying.playerIsDead();
-        for (int i=0; i<itemManager.getItemEntities().size(); i++) itemManager.getItemEntities().get(i).update(player.getHitbox());
-        for (int i=0; i<blockManager.getBlockEntities().size(); i++) blockManager.getBlockEntities().get(i).update(player.getHitbox());
+        blockManager.update();
+        itemManager.update();
+        if (npcManager != null) npcManager.update();
     }
 
     public void draw(Graphics g, int xLevelOffset, int yLevelOffset) {
@@ -134,21 +149,22 @@ public class LevelManager {
                 g.drawImage(blockManager.getBlockSprite(graphicMap[i][j]), (j*TILES_SIZE)-xLevelOffset, (i*TILES_SIZE)-yLevelOffset, TILES_SIZE, TILES_SIZE, null);
             }
         }
-        for (ItemEntity iae : itemManager.getItemEntities()) iae.draw(g, xLevelOffset, yLevelOffset);
-        for (BlockEntity bae : blockManager.getBlockEntities()) bae.draw(g, xLevelOffset, yLevelOffset);
+        blockManager.draw(g, xLevelOffset, yLevelOffset);
+        itemManager.draw(g, xLevelOffset, yLevelOffset);
+        if (npcManager != null) npcManager.draw(g, xLevelOffset, yLevelOffset);
     }
 
     public void interactionOnBlockEntity(BlockEntity bae) {
         int action = bae.getAction();
 
-        if (action == 4) {
-            //demo finished, do endgame
+        //demo finished, do endgame
+        if (action == ConstantValues.BlockEntityAction.GAME_FINISHED) {
             gsPlaying.gameFinished();
             return;
         }
 
-        if (action == 3) {
-            //current level finished, load next level if possible
+        //current level finished, load next level if possible
+        if (action == ConstantValues.BlockEntityAction.NEXT_LEVEL) {
             gsPlaying.loadLevel(levelID+1);
             return;
         }
@@ -156,7 +172,7 @@ public class LevelManager {
         if (bae.getItemRequiredID() != -1 && inventory.getSlot(bae.getItemRequiredID()) > 0) {
             int blockIDFollowed = bae.getBlockIDFollowed();
 
-            if (action == 0) {
+            if (action == ConstantValues.BlockEntityAction.DISAPPEAR) {
                 inventory.useItem(bae.getItemRequiredID());
                 gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.DOOROPEN);
 
@@ -182,7 +198,7 @@ public class LevelManager {
             } else
 
             //mechanic-related that active when using item
-            if (action == 1) {
+            if (action == ConstantValues.BlockEntityAction.APPEAR) {
                 inventory.useItem(bae.getItemRequiredID());
 
                 int actionXMap = bae.getActionXMap();
@@ -209,7 +225,7 @@ public class LevelManager {
             }
 
             //give item on comdition met
-            if (action == 5) {
+            if (action == ConstantValues.BlockEntityAction.GIVE_ITEM_CONDITION_MET) {
                 inventory.putItem(bae.getItemIDToGive());
 
                 if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
@@ -246,6 +262,9 @@ public class LevelManager {
 
     public Playing getGsPlaying() {
         return gsPlaying;
+    }
+    public Player getPlayer() {
+        return player;
     }
 
     public int getLayerLevel(int blockX, int blockY) {
