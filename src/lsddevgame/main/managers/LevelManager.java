@@ -125,7 +125,7 @@ public class LevelManager {
             for (int i=0; i<jsarr.size(); i++) {
                 JSONObject obj = (JSONObject) jsarr.get(i);
                 JSONArray arr = (JSONArray) obj.get("cord");
-                npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String)jsobj.get("npcAtlas"), 16, 16, (int)(long)obj.get("spriteID")), (int)(long)arr.get(0), (int)(long)arr.get(1), new Dialogue(levelID, (String)obj.get("dialogueID")), this));
+                npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String)jsobj.get("npcAtlas"), 16, 16, (int)(long)obj.get("spriteID")), (int)(long)arr.get(0), (int)(long)arr.get(1), (String)obj.get("name"), new Dialogue(levelID, (String)obj.get("dialogueID")), this));
             }
         }
     }
@@ -234,6 +234,12 @@ public class LevelManager {
         //id:0 item is heart, affeted player heart count
         if (iae.getId() == 0) gsPlaying.getPlayer().addHeartCount(); else inventory.putItem(iae.getId());
         itemManager.getItemEntities().remove(iae);
+    }
+    public void checkNPCInteraction() {
+        NPC checkingNPC;
+        if ((checkingNPC = npcManager.getInteractedNPC()) != null) {
+            checkingNPC.doInteraction();
+        }
     }
 
     public int getMapWidth() {

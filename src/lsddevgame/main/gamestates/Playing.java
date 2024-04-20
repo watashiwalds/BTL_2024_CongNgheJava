@@ -4,10 +4,7 @@ import lsddevgame.main.Game;
 import lsddevgame.main.audio.AudioPlayer;
 import lsddevgame.main.managers.LevelManager;
 import lsddevgame.main.objects.entities.Player;
-import lsddevgame.main.ui.playingoverlay.DeathOverlay;
-import lsddevgame.main.ui.playingoverlay.FinishOverlay;
-import lsddevgame.main.ui.playingoverlay.HUDOverlay;
-import lsddevgame.main.ui.playingoverlay.PauseOverlay;
+import lsddevgame.main.ui.playingoverlay.*;
 import lsddevgame.main.utils.ConstantValues;
 import lsddevgame.main.utils.LoadData;
 
@@ -26,6 +23,7 @@ public class Playing extends State {
     private PauseOverlay pauseOverlay;
     private DeathOverlay deathOverlay;
     private FinishOverlay finishOverlay;
+    private DialogueOverlay dialogueOverlay;
     private int levelID;
     private int xLevelOffset, maxXLevelOffset, maxWidthTileOffset, leftBorder, rightBorder;
     private int yLevelOffset, maxYLevelOffset, maxHeightTileOffset, ceilBorder, floorBorder;
@@ -44,6 +42,7 @@ public class Playing extends State {
         player = new Player(LoadData.GetSpriteImage(LoadData.PLAYER_ATLAS), 0, 0, levelManager);
         levelManager.setActivePlayer(player);
         hud = new HUDOverlay();
+        dialogueOverlay = new DialogueOverlay();
         loadLevel(levelID);
 //        player = new Player(LoadData.PLAYER_ATLAS, levelManager.getStartXIndex()*ConstantValues.GameParameters.TILES_SIZE, levelManager.getStartYIndex()*ConstantValues.GameParameters.TILES_SIZE, levelManager);
     }
@@ -176,6 +175,9 @@ public class Playing extends State {
 //                break;
                 case KeyEvent.VK_SPACE:
                     player.setMovement(SPACING, true);
+                    break;
+                case KeyEvent.VK_E:
+                    levelManager.checkNPCInteraction();
                     break;
             }
         }

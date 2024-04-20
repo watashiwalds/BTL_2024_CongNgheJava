@@ -28,4 +28,8 @@ public class NPCManager {
     public ArrayList<NPC> getNpcs() {
         return npcs;
     }
+    public NPC getInteractedNPC() {
+        for (NPC npc : npcs) if (npc.getPlayerTouched()) return npc;
+        return null;
+    }
 }

@@ -151,7 +151,7 @@
   "npcs": [
     {
       "name": "Number 0",
-      "spriteID": 1,
+      "spriteID": 0,
       "cord": [4, 30],
       "dialogueID": "no0"
     }

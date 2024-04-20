@@ -12,6 +12,9 @@ public class DialogueOverlay {
     public void loadDialogue(NPC npc, Dialogue dialogue) {
         this.npc = npc;
         this.dialogue = dialogue;
+    }
+
+    public void playDialogue() {
 
     }
 }
