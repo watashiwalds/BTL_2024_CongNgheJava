@@ -34,10 +34,10 @@ public class HelperPack {
         int currentTile = (int)(hitbox.x+(hitbox.width/2))/GameParameters.TILES_SIZE;
         if (xSpeed > 0) {
             //goto right
-            return (currentTile * GameParameters.TILES_SIZE) + (GameParameters.TILES_SIZE-hitbox.width) -1;
+            return (currentTile * GameParameters.TILES_SIZE) + (GameParameters.TILES_SIZE-hitbox.width) - 1;
         } else {
             //goto left
-            return (currentTile * GameParameters.TILES_SIZE);
+            return (currentTile * GameParameters.TILES_SIZE) + 1;
         }
     }
     public static float GetRoofOrFloorNextToEntity(Rectangle2D.Float hitbox, float airSpeed) {
@@ -86,6 +86,12 @@ public class HelperPack {
         float mapY = y / GameParameters.TILES_SIZE;
         return (levelManager.getLayerLevel((int)mapX, (int)mapY) == 2);
     }
+    public static boolean isInOnewayPlatform(float x, float y, float w, LevelManager levelManager) {
+        float mapXwoW = x / GameParameters.TILES_SIZE;
+        float mapXwW = (x+w) / GameParameters.TILES_SIZE;
+        float mapY = y / GameParameters.TILES_SIZE;
+        return (levelManager.getLayerLevel((int)mapXwoW, (int)mapY) == 2 || levelManager.getLayerLevel((int)mapXwW, (int)mapY) == 2);
+    }
     public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, float airSpeed, LevelManager levelManager) {
         if (!isSolidCheck(hitbox.x+hitbox.width+1, hitbox.y+hitbox.height+1, levelManager))
             if (!isSolidCheck(hitbox.x, hitbox.y+hitbox.height+1, levelManager))
@@ -96,6 +102,6 @@ public class HelperPack {
     }
     public static float GetRoofNextToEntity(Rectangle2D.Float hitbox) {
         int currentTile = (int)(hitbox.y+(hitbox.height/2))/GameParameters.TILES_SIZE;
-        return (currentTile * GameParameters.TILES_SIZE) - 1;
+        return (currentTile * GameParameters.TILES_SIZE);
     }
 }

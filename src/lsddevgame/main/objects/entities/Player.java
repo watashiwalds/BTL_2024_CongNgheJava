@@ -117,9 +117,11 @@ public class Player extends Entity {
 
         //climb stair (affect yCord so allowed to be in udPos)
         if (upDir && levelManager.getLayerLevel((int)xTile, (int)yTile) == 3) {
-            if (HelperPack.canCollisionWithCheck(hitbox.x, hitbox.y, hitbox.width, hitbox.height, airSpeed, levelManager)) {
+            if (HelperPack.canCollisionWithCheck(hitbox.x, hitbox.y, hitbox.width, hitbox.height, airSpeed, levelManager) && !HelperPack.isInOnewayPlatform(hitbox.x, hitbox.y, hitbox.width, levelManager)) {
                 yCord -= climbSpeed;
                 audioPlayer.playSFX(AudioPlayer.CLIMBING);
+            } else {
+                yCord = HelperPack.GetRoofNextToEntity(hitbox) - offsetY;
             }
             setState(PlayerConstants.CLIMBING);
             updateXPos(xSpeed);
