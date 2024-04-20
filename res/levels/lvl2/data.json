@@ -150,9 +150,9 @@
   "spriteCount": 3,
   "npcs": [
     {
+      "name": "Number 0",
       "spriteID": 1,
       "cord": [4, 30],
-      "haveDialogue": true,
       "dialogueID": "no0"
     }
   ]

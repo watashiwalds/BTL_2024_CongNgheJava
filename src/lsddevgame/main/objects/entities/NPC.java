@@ -12,9 +12,10 @@ import java.awt.image.BufferedImage;
 public class NPC extends Entity{
 
     private BufferedImage keyHint;
+    private Dialogue dialogue;
     private boolean keyHintShow = false;
 
-    public NPC(BufferedImage srcImg, int xTile, int yTile, LevelManager levelManager) {
+    public NPC(BufferedImage srcImg, int xTile, int yTile, Dialogue dialogue, LevelManager levelManager) {
         super(srcImg, xTile*ConstantValues.GameParameters.TILES_SIZE, yTile*ConstantValues.GameParameters.TILES_SIZE, levelManager);
         super.hitboxInitialize(1, 1, ConstantValues.GameParameters.TILES_SIZE-2, ConstantValues.GameParameters.TILES_SIZE-2);
         keyHint = LoadData.GetSpriteImage(LoadData.KEYCAP_PATH + "key_e.png");

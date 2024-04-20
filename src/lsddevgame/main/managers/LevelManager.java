@@ -2,6 +2,7 @@ package lsddevgame.main.managers;
 
 import lsddevgame.main.audio.AudioPlayer;
 import lsddevgame.main.gamestates.Playing;
+import lsddevgame.main.mechanics.Dialogue;
 import lsddevgame.main.mechanics.Inventory;
 import lsddevgame.main.objects.entities.BlockEntity;
 import lsddevgame.main.objects.entities.NPC;
@@ -49,89 +50,83 @@ public class LevelManager {
         this.player = player;
     }
     private void loadLevelData() {
-        String dataJSONPath = "res/levels/lvl"+levelID+"/data.json";
-        JSONParser jspr = new JSONParser();
-        try {
-            JSONObject jsobj = (JSONObject) jspr.parse(new FileReader(dataJSONPath));
+        JSONObject jsobj = LoadData.GetJSONFile("res/levels/lvl"+levelID+"/data.json");
 
-            JSONArray jsarr = (JSONArray) jsobj.get("playerStartIndex");
-            startXIndex = (int)(long)jsarr.get(0);
-            startYIndex = (int)(long)jsarr.get(1);
+        JSONArray jsarr = (JSONArray) jsobj.get("playerStartIndex");
+        startXIndex = (int)(long)jsarr.get(0);
+        startYIndex = (int)(long)jsarr.get(1);
 
-            jsarr = (JSONArray) jsobj.get("mapSize");
-            mapW = (int)(long)jsarr.get(0);
-            mapH = (int)(long)jsarr.get(1);
+        jsarr = (JSONArray) jsobj.get("mapSize");
+        mapW = (int)(long)jsarr.get(0);
+        mapH = (int)(long)jsarr.get(1);
 
-            bgSrc = (String)jsobj.get("background");
-            background = LoadData.GetSpriteImage(bgSrc);
+        bgSrc = (String)jsobj.get("background");
+        background = LoadData.GetSpriteImage(bgSrc);
 
-            itemAtlas = (String)jsobj.get("itemAtlas");
-            itemTypes = (int)(long)jsobj.get("itemTypes");
-            itemManager = new ItemManager(this, itemAtlas, itemTypes);
-            inventory = new Inventory(itemTypes);
-            jsarr = (JSONArray) jsobj.get("itemSpawns");
-            for (int i=0; i<jsarr.size(); i++) {
-                JSONObject obj = (JSONObject) jsarr.get(i);
-                int id = (int)(long)obj.get("id");
-                int xTile = (int)(long)((JSONArray)obj.get("cord")).get(0);
-                int yTile = (int)(long)((JSONArray)obj.get("cord")).get(1);
-                itemManager.addItemEntity(new ItemEntity(id, xTile, yTile, this, itemManager));
+        itemAtlas = (String)jsobj.get("itemAtlas");
+        itemTypes = (int)(long)jsobj.get("itemTypes");
+        itemManager = new ItemManager(this, itemAtlas, itemTypes);
+        inventory = new Inventory(itemTypes);
+        jsarr = (JSONArray) jsobj.get("itemSpawns");
+        for (int i=0; i<jsarr.size(); i++) {
+            JSONObject obj = (JSONObject) jsarr.get(i);
+            int id = (int)(long)obj.get("id");
+            int xTile = (int)(long)((JSONArray)obj.get("cord")).get(0);
+            int yTile = (int)(long)((JSONArray)obj.get("cord")).get(1);
+            itemManager.addItemEntity(new ItemEntity(id, xTile, yTile, this, itemManager));
+        }
+
+        blockAtlas = (String)jsobj.get("blockAtlas");
+        blockTypes = (int)(long)jsobj.get("blockTypes");
+        blockManager = new BlockManager(this, blockAtlas, blockTypes);
+
+        graphicMap = new int[mapH][mapW];
+        jsarr = (JSONArray) jsobj.get("graphicMap");
+        JSONArray jsrow;
+        for (int i=0; i<mapH; i++) {
+            jsrow = (JSONArray) jsarr.get(i);
+            for (int j=0; j<mapW; j++) {
+                graphicMap[i][j] = (int)(long)jsrow.get(j);
             }
-
-            blockAtlas = (String)jsobj.get("blockAtlas");
-            blockTypes = (int)(long)jsobj.get("blockTypes");
-            blockManager = new BlockManager(this, blockAtlas, blockTypes);
-
-            graphicMap = new int[mapH][mapW];
-            jsarr = (JSONArray) jsobj.get("graphicMap");
-            JSONArray jsrow;
-            for (int i=0; i<mapH; i++) {
-                jsrow = (JSONArray) jsarr.get(i);
-                for (int j=0; j<mapW; j++) {
-                    graphicMap[i][j] = (int)(long)jsrow.get(j);
-                }
+        }
+        layerMap = new int[mapH][mapW];
+        jsarr = (JSONArray) jsobj.get("layerMap");
+        for (int i=0; i<mapH; i++) {
+            jsrow = (JSONArray) jsarr.get(i);
+            for (int j=0; j<mapW; j++) {
+                layerMap[i][j] = (int)(long)jsrow.get(j);
             }
-            layerMap = new int[mapH][mapW];
-            jsarr = (JSONArray) jsobj.get("layerMap");
-            for (int i=0; i<mapH; i++) {
-                jsrow = (JSONArray) jsarr.get(i);
-                for (int j=0; j<mapW; j++) {
-                    layerMap[i][j] = (int)(long)jsrow.get(j);
-                }
-            }
+        }
 
-            jsarr = (JSONArray) jsobj.get("interactiveBlocks");
+        jsarr = (JSONArray) jsobj.get("interactiveBlocks");
+        for (int i=0; i<jsarr.size(); i++) {
+            JSONObject obj = (JSONObject) jsarr.get(i);
+            JSONArray arr = (JSONArray) obj.get("cord");
+            int x = (int)(long)arr.get(0);
+            int y = (int)(long)arr.get(1);
+            String action = (String)obj.get("action");
+            String message = (String)obj.get("message");
+            if (action.equalsIgnoreCase("appear")) {
+                JSONArray arr2 = (JSONArray) obj.get("appearCord");
+                blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (int)(long)arr2.get(0), (int)(long)arr2.get(1), this, blockManager));
+            } else if (action.equalsIgnoreCase("dialogue")) {
+                blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (long)obj.get("duration"), (boolean)obj.get("removeAfterAction"), this, blockManager));
+            } else if (action.equalsIgnoreCase("giveItem")) {
+                blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (int)(long)obj.get("giveItemID"), this, blockManager));
+            } else {
+                blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, this, blockManager));
+            }
+        }
+
+        if (jsobj.containsKey("npcs")) {
+            npcManager = new NPCManager(this);
+
+            jsarr = (JSONArray) jsobj.get("npcs");
             for (int i=0; i<jsarr.size(); i++) {
                 JSONObject obj = (JSONObject) jsarr.get(i);
                 JSONArray arr = (JSONArray) obj.get("cord");
-                int x = (int)(long)arr.get(0);
-                int y = (int)(long)arr.get(1);
-                String action = (String)obj.get("action");
-                String message = (String)obj.get("message");
-                if (action.equalsIgnoreCase("appear")) {
-                    JSONArray arr2 = (JSONArray) obj.get("appearCord");
-                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (int)(long)arr2.get(0), (int)(long)arr2.get(1), this, blockManager));
-                } else if (action.equalsIgnoreCase("dialogue")) {
-                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (long)obj.get("duration"), (boolean)obj.get("removeAfterAction"), this, blockManager));
-                } else if (action.equalsIgnoreCase("giveItem")) {
-                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (int)(long)obj.get("giveItemID"), this, blockManager));
-                } else {
-                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, this, blockManager));
-                }
+                npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String)jsobj.get("npcAtlas"), 16, 16, (int)(long)obj.get("spriteID")), (int)(long)arr.get(0), (int)(long)arr.get(1), new Dialogue(levelID, (String)obj.get("dialogueID")), this));
             }
-
-            if (jsobj.containsKey("npcs")) {
-                npcManager = new NPCManager(this);
-
-                jsarr = (JSONArray) jsobj.get("npcs");
-                for (int i=0; i<jsarr.size(); i++) {
-                    JSONObject obj = (JSONObject) jsarr.get(i);
-                    JSONArray arr = (JSONArray) obj.get("cord");
-                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String)jsobj.get("npcAtlas"), 16, 16, (int)(long)obj.get("spriteID")), (int)(long)arr.get(0), (int)(long)arr.get(1), this));
-                }
-            }
-        } catch (ParseException | IOException e) {
-            e.printStackTrace();
         }
     }
 

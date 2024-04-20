@@ -1,9 +1,14 @@
 package lsddevgame.main.utils;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -68,5 +73,18 @@ public class LoadData {
             throw new RuntimeException(e);
         }
         return font;
+    }
+
+    public static JSONObject GetJSONFile(String jsonSrc) {
+        JSONObject jsobj;
+        JSONParser jspar = new JSONParser();
+        try {
+            jsobj = (JSONObject) jspar.parse(new FileReader(jsonSrc));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return jsobj;
     }
 }
