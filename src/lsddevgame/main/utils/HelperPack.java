@@ -10,17 +10,15 @@ import java.util.logging.Level;
 import static lsddevgame.main.utils.ConstantValues.*;
 
 public class HelperPack {
-
-    //airspeed serve only for player, 0 for all else
-    public static boolean canCollisionWithCheck(float x, float y, float w, float h, float airSpeed, LevelManager levelManager) {
-        if (!isSolidCheck(x, y, airSpeed, levelManager))
-            if (!isSolidCheck(x+w, y+h, airSpeed, levelManager))
-                if (!isSolidCheck(x+w, y, airSpeed, levelManager))
-                    if (!isSolidCheck(x, y+h, airSpeed, levelManager))
+    public static boolean canCollisionWithCheck(float x, float y, float w, float h, LevelManager levelManager) {
+        if (!isSolidCheck(x, y, levelManager))
+            if (!isSolidCheck(x+w, y, levelManager))
+                if (!isSolidCheck(x, y+h, levelManager))
+                    if (!isSolidCheck(x+w, y+h, levelManager))
                         return true;
         return false;
     }
-    private static boolean isSolidCheck(float x, float y, float airSpeed, LevelManager levelManager) {
+    private static boolean isSolidCheck(float x, float y, LevelManager levelManager) {
         //window boundary
         if (x < 0 || x >= (levelManager.getMapWidth() * GameParameters.TILES_SIZE)) return true;
         if (y < 0 || y >= (levelManager.getMapHeight() * GameParameters.TILES_SIZE)) return true;
@@ -29,10 +27,7 @@ public class HelperPack {
         float mapY = y / GameParameters.TILES_SIZE;
 
         int oncheckLayer = levelManager.getLayerLevel((int) mapX, (int) mapY);
-        return (oncheckLayer == LayerLevel.MIDDLE || onewaySolidCheck((int)mapX, (int)mapY, airSpeed, levelManager));
-    }
-    private static boolean onewaySolidCheck(int mapX, int mapY, float airSpeed, LevelManager levelManager) {
-        return (levelManager.getLayerLevel(mapX, mapY) == 2 && airSpeed >= 0);
+        return (oncheckLayer == LayerLevel.MIDDLE);
     }
 
     public static float GetWallNextToEntity(Rectangle2D.Float hitbox, float xSpeed) {
@@ -55,9 +50,9 @@ public class HelperPack {
             return (currentTile * GameParameters.TILES_SIZE) - 1;
         }
     }
-    public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, float airSpeed, LevelManager levelManager) {
-        if (!isSolidCheck(hitbox.x+hitbox.width+1, hitbox.y+hitbox.height+1, airSpeed, levelManager))
-            if (!isSolidCheck(hitbox.x, hitbox.y+hitbox.height+1, airSpeed, levelManager))
+    public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, LevelManager levelManager) {
+        if (!isSolidCheck(hitbox.x+hitbox.width+1, hitbox.y+hitbox.height+1, levelManager))
+            if (!isSolidCheck(hitbox.x, hitbox.y+hitbox.height+1, levelManager))
                 return false;
         return true;
     }
@@ -68,5 +63,39 @@ public class HelperPack {
     }
     public static boolean IsMouseOnSensableArea(Rectangle area, MouseEvent theMouse) {
         return area.contains(theMouse.getX(), theMouse.getY());
+    }
+
+    //modified for player (screw you onewayplatform)
+    public static boolean canCollisionWithCheck(float x, float y, float w, float h, float airSpeed, LevelManager levelManager) {
+        if (!isSolidCheck(x, y, levelManager))
+            if (!isSolidCheck(x+w, y, levelManager))
+                if (!isSolidCheck(x, y+h, levelManager))
+                    if (!isSolidCheck(x+w, y+h, levelManager))
+                        if (!onewaySolidCheck(x, y+h, airSpeed, levelManager))
+                            if (!onewaySolidCheck(x+w, y+h, airSpeed, levelManager))
+                                return true;
+        return false;
+    }
+    private static boolean onewaySolidCheck(float x, float y, float airSpeed, LevelManager levelManager) {
+        float mapX = x / GameParameters.TILES_SIZE;
+        float mapY = y / GameParameters.TILES_SIZE;
+        return (levelManager.getLayerLevel((int)mapX, (int)mapY) == 2 && airSpeed >= 0);
+    }
+    private static boolean isOnOnewayPlatform(float x, float y, LevelManager levelManager) {
+        float mapX = x / GameParameters.TILES_SIZE;
+        float mapY = y / GameParameters.TILES_SIZE;
+        return (levelManager.getLayerLevel((int)mapX, (int)mapY) == 2);
+    }
+    public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, float airSpeed, LevelManager levelManager) {
+        if (!isSolidCheck(hitbox.x+hitbox.width+1, hitbox.y+hitbox.height+1, levelManager))
+            if (!isSolidCheck(hitbox.x, hitbox.y+hitbox.height+1, levelManager))
+                if (!isOnOnewayPlatform(hitbox.x, hitbox.y+hitbox.height+1, levelManager))
+                    if (!isOnOnewayPlatform(hitbox.x+hitbox.width, hitbox.y+hitbox.height+1, levelManager))
+                    return false;
+        return true;
+    }
+    public static float GetRoofNextToEntity(Rectangle2D.Float hitbox) {
+        int currentTile = (int)(hitbox.y+(hitbox.height/2))/GameParameters.TILES_SIZE;
+        return (currentTile * GameParameters.TILES_SIZE) - 1;
     }
 }

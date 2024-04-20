@@ -140,7 +140,7 @@ public class Player extends Entity {
             } else {
                 if (levelManager.getLayerLevel((int)xTile, (int)yTile) != 2) {
                     yCord = HelperPack.GetRoofOrFloorNextToEntity(hitbox, airSpeed);
-                    if (airSpeed > 0) {
+                    if (airSpeed >= 0) {
                         resetInAir(); //hit floor? no more in air action
                     } else {
                         yCord -= offsetY; //hitbox offset with model so model need to render above where hitbox is
@@ -159,7 +159,7 @@ public class Player extends Entity {
     private void updateXPos(float xSpeed) {
         if (HelperPack.canCollisionWithCheck(hitbox.x+xSpeed, hitbox.y, hitbox.width, hitbox.height, airSpeed, levelManager)) {
             xCord += xSpeed;
-        } else {
+        } else if (levelManager.getLayerLevel((int)xTile, (int)yTile) < 2) {
             xCord = HelperPack.GetWallNextToEntity(hitbox, xSpeed) - offsetX;
         }
     }
