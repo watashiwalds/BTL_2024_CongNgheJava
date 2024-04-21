@@ -133,10 +133,6 @@
       "cord": [41,27]
     },
     {
-      "id": 2,
-      "cord": [7,30]
-    },
-    {
       "id": 3,
       "cord": [51,2]
     },
@@ -152,7 +148,7 @@
     {
       "name": "Number 0",
       "npcID": "no0",
-      "cord": [4, 30],
+      "cord": [7, 30],
       "spriteID": 0,
       "dialogueID": "dlg1",
       "action": "giveItem",

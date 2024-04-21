@@ -101,8 +101,18 @@ public class ConstantValues {
         }
     }
 
-    public static class BlockIDs {
-        public static final int AIR = 0;
+    public static class BlockEntityAction {
+        public static final int DISAPPEAR = 0;
+        public static final int APPEAR = 1;
+        public static final int GIVE_ITEM_CONDITION_MET = 2;
+        public static final int DIALOGUE = 3;
+        public static final int NEXT_LEVEL = 4;
+        public static final int GAME_FINISHED = 5;
+    }
+
+    public static class NPCAction {
+        public static final int TALK_ONLY = 0;
+        public static final int GIVE_ITEM = 1;
     }
 
     public static class LayerLevel {

@@ -47,7 +47,7 @@ public class Playing extends State {
         levelManager.setActivePlayer(player);
         hud = new HUDOverlay();
         dialogueOverlay = new DialogueOverlay(this);
-        loadLevel(2);
+        loadLevel(levelID);
 //        player = new Player(LoadData.PLAYER_ATLAS, levelManager.getStartXIndex()*ConstantValues.GameParameters.TILES_SIZE, levelManager.getStartYIndex()*ConstantValues.GameParameters.TILES_SIZE, levelManager);
     }
 
