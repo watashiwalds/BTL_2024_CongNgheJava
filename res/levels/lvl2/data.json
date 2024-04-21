@@ -151,9 +151,13 @@
   "npcs": [
     {
       "name": "Number 0",
-      "spriteID": 0,
+      "npcID": "no0",
       "cord": [4, 30],
-      "dialogueID": "no0"
+      "spriteID": 0,
+      "dialogueID": "dlg1",
+      "action": "giveItem",
+      "itemID": 2,
+      "removeAfterAction": true
     }
   ]
 }

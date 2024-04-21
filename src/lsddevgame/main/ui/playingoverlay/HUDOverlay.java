@@ -32,11 +32,12 @@ public class HUDOverlay {
         this.itemManager = itemManager;
         this.player = player;
 
+        hudScaling = ConstantValues.GameParameters.SCALING*0.8f;
+
         slotFrame = LoadData.GetSpriteImage("/gui/hud/invenslot.png");
-        font = LoadData.GetFont("/font/EightBitDragon.ttf");
+        font = LoadData.GetFont("/font/EightBitDragon.ttf").deriveFont(6*hudScaling);
         heartIcon = LoadData.GetSpriteImage("/gui/hud/hearticon.png");
 
-        hudScaling = ConstantValues.GameParameters.SCALING*0.8f;
         padding = (int)(8*hudScaling);
         frameSize = (int)(slotFrame.getHeight()*hudScaling);
     }
@@ -61,7 +62,7 @@ public class HUDOverlay {
 
     public void draw(Graphics g) {
         int shownSlots = 0;
-        g.setFont(font.deriveFont(6*hudScaling));
+        g.setFont(font);
         g.setColor(Color.DARK_GRAY);
         for (int i=0; i<inventory.getSlots().length; i++) {
             if (inventory.getSlot(i) > 0) {

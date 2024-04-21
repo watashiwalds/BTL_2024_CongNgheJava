@@ -1,12 +1,13 @@
 {
-  "no0": [
-    "Whoa, that was quite a fall just now!",
-    "Huh, a little cat? Guess your legs just saved you a life!",
-    "I am Number 0, the elder of the Numeric Village up above.",
-    "Why am I in this cave? It's because those folks called Industrial Conversion Corporation.",
-    "They're wreaking havoc on our village up there!",
-    "Now, I'm on the hunt for someone who can push those fellows out of here.",
-    "I know you're not one of us numbers, but maybe you can do what we can't.",
-    "Keep walking, I'll help you open the door out of this cave."
+  "dlg1": [
+    ["no0", "Whoa, that was quite a fall just now!"],
+    ["no0", "Huh, a little cat? Guess your legs just saved you a life!"],
+    ["player", "meow."],
+    ["no0","Hmm, who an I? I am Number 0, the elder of the Numeric Village up above."],
+    ["no0","And why am I in this cave? It's because those folks called Industrial Conversion Corporation.\nThey're wreaking havoc on our village up there!"],
+    ["no0","Now, I'm on the hunt for someone who can push those fellows out."],
+    ["no0","I know you're not one of us numbers, but maybe you can do what we can't."],
+    ["no0","Keep walking, I'll help you open the door out of this cave."],
+    ["player","meoww"]
   ]
 }

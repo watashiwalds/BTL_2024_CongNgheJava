@@ -230,7 +230,7 @@ public class Player extends Entity {
         //define moving or idle state
         if (!rightDir && !leftDir) this.setState(PlayerConstants.IDLE);
     }
-    private void resetDirection() {
+    public void resetDirection() {
         upDir = downDir = leftDir = rightDir = false;
     }
 
@@ -268,7 +268,7 @@ public class Player extends Entity {
     }
 
     //animation image loop
-    private void updateAnimation() {
+    public void updateAnimation() {
         //assign value to animation loop duration
         //'cause player has many state -> duration has to be changed
         aniTickPerFrame = 60/PlayerConstants.GetSpriteAmount(aniType); //1 loop per sec
@@ -302,5 +302,9 @@ public class Player extends Entity {
     //a state where player <=0 heart, force gamer to replay the chapter
     public boolean isAlive() {
         return (heartCount>0);
+    }
+
+    public BufferedImage getDialogueSprite() {
+        return playerAni[0][0];
     }
 }

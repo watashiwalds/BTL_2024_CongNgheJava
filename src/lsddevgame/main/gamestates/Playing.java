@@ -17,7 +17,7 @@ import static lsddevgame.main.utils.ConstantValues.Movement.RIGHT;
 
 public class Playing extends State {
     public enum PlayState {
-        PLAY, PAUSE, DEATH, FINISH;
+        PLAY, PAUSE, DEATH, FINISH, DIALOGUE;
     }
 
     private static PlayState playState = PlayState.PLAY;
@@ -46,8 +46,8 @@ public class Playing extends State {
         player = new Player(LoadData.GetSpriteImage(LoadData.PLAYER_ATLAS), 0, 0, levelManager);
         levelManager.setActivePlayer(player);
         hud = new HUDOverlay();
-        dialogueOverlay = new DialogueOverlay();
-        loadLevel(levelID);
+        dialogueOverlay = new DialogueOverlay(this);
+        loadLevel(2);
 //        player = new Player(LoadData.PLAYER_ATLAS, levelManager.getStartXIndex()*ConstantValues.GameParameters.TILES_SIZE, levelManager.getStartYIndex()*ConstantValues.GameParameters.TILES_SIZE, levelManager);
     }
 
@@ -114,6 +114,9 @@ public class Playing extends State {
             case PAUSE:
                 pauseOverlay.update();
                 break;
+            case DIALOGUE:
+                player.updateAnimation();
+                break;
             case DEATH:
                 deathOverlay.update();
                 break;
@@ -127,9 +130,10 @@ public class Playing extends State {
     public void draw(Graphics g) {
         levelManager.draw(g, xLevelOffset, yLevelOffset);
         player.draw(g, xLevelOffset, yLevelOffset);
-        hud.draw(g);
         switch (playState) {
+            case PLAY -> hud.draw(g);
             case PAUSE -> pauseOverlay.draw(g);
+            case DIALOGUE -> dialogueOverlay.draw(g);
             case DEATH -> deathOverlay.draw(g);
             case FINISH -> finishOverlay.draw(g);
         }
@@ -170,6 +174,8 @@ public class Playing extends State {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (playState) {
+            case DIALOGUE:
+                dialogueOverlay.keyPressed(e);
             case PLAY:
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_W:
@@ -193,8 +199,10 @@ public class Playing extends State {
                 }
             case PAUSE:
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    player.resetDirection();
                     playState = playState == PlayState.PLAY ? PlayState.PAUSE : PlayState.PLAY;
                 }
+                break;
         }
     }
 
@@ -221,12 +229,10 @@ public class Playing extends State {
     public Player getPlayer() {
         return player;
     }
-
-    public PauseOverlay getPauseOverlay() {
-        return pauseOverlay;
-    }
-
     public HUDOverlay getHud() {return hud;}
+    public DialogueOverlay getDialogueOverlay() {
+        return dialogueOverlay;
+    }
 
     public void unPause() {
         playState = PlayState.PLAY;
@@ -240,5 +246,12 @@ public class Playing extends State {
         playState = PlayState.FINISH;
         game.getAudioPlayer().stopBgMusic();
         game.getAudioPlayer().playSFX(AudioPlayer.DEMO_FINISHED);
+    }
+
+    public void dialogueStart() {
+        playState = PlayState.DIALOGUE;
+    }
+    public void dialogueFinished() {
+        playState = PlayState.PLAY;
     }
 }

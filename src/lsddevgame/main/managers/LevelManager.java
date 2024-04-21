@@ -148,7 +148,12 @@ public class LevelManager {
             for (int i=0; i<jsarr.size(); i++) {
                 JSONObject obj = (JSONObject) jsarr.get(i);
                 JSONArray arr = (JSONArray) obj.get("cord");
-                npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String)jsobj.get("npcAtlas"), 16, 16, (int)(long)obj.get("spriteID")), (int)(long)arr.get(0), (int)(long)arr.get(1), (String)obj.get("name"), new Dialogue(levelID, (String)obj.get("dialogueID")), this));
+                String action = (String)obj.get("action");
+                if (action.equalsIgnoreCase("giveItem")) {
+                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), action, (int)(long)obj.get("itemID"), (boolean)obj.get("removeAfterAction"), this));
+                } else {
+                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), this));
+                }
             }
         }
     }
@@ -267,6 +272,15 @@ public class LevelManager {
         NPC checkingNPC;
         if ((checkingNPC = npcManager.getInteractedNPC()) != null) {
             checkingNPC.doInteraction();
+            gsPlaying.dialogueStart();
+        }
+    }
+    public void finishNPCInteraction(NPC npc) {
+        if (npc.getAction() == ConstantValues.NPCAction.GIVE_ITEM) {
+            inventory.putItem(npc.getTogiveItemID());
+        }
+        if (npc.needRemoveAfterAction()) {
+            npcManager.getNpcs().remove(npc);
         }
     }
 

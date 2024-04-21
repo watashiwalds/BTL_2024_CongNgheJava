@@ -10,17 +10,32 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class NPC extends Entity{
-    private String name;
+    private String name, id;
     private BufferedImage keyHint;
     private Dialogue dialogue;
     private boolean playerTouched = false;
+    private int action = 0;
+    private int togiveItemID = -1;
+    private boolean removeAfterAction = false;
 
-    public NPC(BufferedImage srcImg, int xTile, int yTile, String name, Dialogue dialogue, LevelManager levelManager) {
+    public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, LevelManager levelManager) {
         super(srcImg, xTile*ConstantValues.GameParameters.TILES_SIZE, yTile*ConstantValues.GameParameters.TILES_SIZE, levelManager);
         super.hitboxInitialize(1, 1, ConstantValues.GameParameters.TILES_SIZE-2, ConstantValues.GameParameters.TILES_SIZE-2);
+        this.id = id;
         this.name = name;
         this.dialogue = dialogue;
         keyHint = LoadData.GetSpriteImage(LoadData.KEYCAP_PATH + "key_e.png");
+    }
+    public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, String actionInText, int itemID, boolean removeAfterAction, LevelManager levelManager) {
+        this(srcImg, xTile, yTile, id, name, dialogue, levelManager);
+        action = defineActionInText(actionInText);
+        this.togiveItemID = itemID;
+        this.removeAfterAction = removeAfterAction;
+    }
+
+    private int defineActionInText(String actionInText) {
+        if (actionInText.equalsIgnoreCase("giveItem")) return ConstantValues.NPCAction.GIVE_ITEM;
+        return ConstantValues.NPCAction.TALK_ONLY;
     }
 
     public void update(Rectangle2D.Float playerHitbox) {
@@ -42,6 +57,26 @@ public class NPC extends Entity{
     }
 
     public void doInteraction() {
-        System.out.println("interact");
+        levelManager.getGsPlaying().getDialogueOverlay().playDialogue(this);
     }
+
+    public void doActionAfterInteraction() {
+        levelManager.finishNPCInteraction(this);
+    }
+
+    public Dialogue getDialogue() {
+        return dialogue;
+    }
+    public BufferedImage getSprite() {
+        return srcImg;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getId() {
+        return id;
+    }
+    public int getAction() {return action;}
+    public int getTogiveItemID() {return togiveItemID;}
+    public boolean needRemoveAfterAction() {return removeAfterAction;}
 }
