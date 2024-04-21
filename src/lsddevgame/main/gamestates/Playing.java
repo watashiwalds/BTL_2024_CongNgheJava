@@ -150,7 +150,7 @@ public class Playing extends State {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!pause && !death) {
+        if (!pause && !death && !finish) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_W:
                     player.setMovement(UP, true);
@@ -181,14 +181,14 @@ public class Playing extends State {
                     break;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !death) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !death && !finish) {
             this.pause = !this.pause;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (!pause && !death) {
+        if (!pause && !death && !finish) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_W:
                     player.setMovement(UP, false);
