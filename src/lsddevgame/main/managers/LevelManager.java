@@ -118,9 +118,8 @@ public class LevelManager {
             }
         }
 
+        npcManager = new NPCManager(this);
         if (jsobj.containsKey("npcs")) {
-            npcManager = new NPCManager(this);
-
             jsarr = (JSONArray) jsobj.get("npcs");
             for (int i=0; i<jsarr.size(); i++) {
                 JSONObject obj = (JSONObject) jsarr.get(i);
@@ -146,7 +145,7 @@ public class LevelManager {
         }
         blockManager.draw(g, xLevelOffset, yLevelOffset);
         itemManager.draw(g, xLevelOffset, yLevelOffset);
-        if (npcManager != null) npcManager.draw(g, xLevelOffset, yLevelOffset);
+        if (npcManager.emptyNPCs()) npcManager.draw(g, xLevelOffset, yLevelOffset);
     }
 
     public void interactionOnBlockEntity(BlockEntity bae) {

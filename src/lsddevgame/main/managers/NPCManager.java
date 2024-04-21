@@ -32,4 +32,7 @@ public class NPCManager {
         for (NPC npc : npcs) if (npc.getPlayerTouched()) return npc;
         return null;
     }
+    public boolean emptyNPCs() {
+        return npcs.isEmpty();
+    }
 }
