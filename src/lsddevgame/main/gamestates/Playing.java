@@ -16,9 +16,13 @@ import static lsddevgame.main.utils.ConstantValues.Movement.*;
 import static lsddevgame.main.utils.ConstantValues.Movement.RIGHT;
 
 public class Playing extends State {
+    public enum PlayState {
+        PLAY, PAUSE, DEATH, FINISH;
+    }
+
+    private static PlayState playState = PlayState.PLAY;
     private Player player;
     private LevelManager levelManager;
-    private boolean pause = false, death = false, finish = false;
     private HUDOverlay hud;
     private PauseOverlay pauseOverlay;
     private DeathOverlay deathOverlay;
@@ -100,16 +104,23 @@ public class Playing extends State {
 
     @Override
     public void update() {
-        if (!pause && !death && !finish) {
-            player.update();
-            levelManager.update();
-            adjustOffset();
-            hud.update();
-            return;
+        switch (playState) {
+            case PLAY:
+                player.update();
+                levelManager.update();
+                adjustOffset();
+                hud.update();
+                break;
+            case PAUSE:
+                pauseOverlay.update();
+                break;
+            case DEATH:
+                deathOverlay.update();
+                break;
+            case FINISH:
+                finishOverlay.update();
+                break;
         }
-        if (pause) pauseOverlay.update(); else
-        if (death) deathOverlay.update(); else
-        if (finish) finishOverlay.update();
     }
 
     @Override
@@ -117,9 +128,11 @@ public class Playing extends State {
         levelManager.draw(g, xLevelOffset, yLevelOffset);
         player.draw(g, xLevelOffset, yLevelOffset);
         hud.draw(g);
-        if (pause) pauseOverlay.draw(g); else
-        if (death) deathOverlay.draw(g); else
-        if (finish) finishOverlay.draw(g);
+        switch (playState) {
+            case PAUSE -> pauseOverlay.draw(g);
+            case DEATH -> deathOverlay.draw(g);
+            case FINISH -> finishOverlay.draw(g);
+        }
     }
 
     @Override
@@ -129,66 +142,65 @@ public class Playing extends State {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (death) deathOverlay.mousePressed(e); else
-        if (pause) pauseOverlay.mousePressed(e); else
-        if (finish) finishOverlay.mousePressed(e);
+        switch (playState) {
+            case PAUSE -> pauseOverlay.mousePressed(e);
+            case DEATH -> deathOverlay.mousePressed(e);
+            case FINISH -> finishOverlay.mousePressed(e);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (death) deathOverlay.mouseReleased(e); else
-        if (pause) pauseOverlay.mouseReleased(e); else
-        if (finish) finishOverlay.mouseReleased(e);
+        switch (playState) {
+            case PAUSE -> pauseOverlay.mouseReleased(e);
+            case DEATH -> deathOverlay.mouseReleased(e);
+            case FINISH -> finishOverlay.mouseReleased(e);
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (death) deathOverlay.mouseMoved(e); else
-        if (pause) pauseOverlay.mouseMoved(e); else
-        if (finish) finishOverlay.mouseMoved(e);
+        switch (playState) {
+            case PAUSE -> pauseOverlay.mouseMoved(e);
+            case DEATH -> deathOverlay.mouseMoved(e);
+            case FINISH -> finishOverlay.mouseMoved(e);
+        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!pause && !death && !finish) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_W:
-                    player.setMovement(UP, true);
-                    break;
-                case KeyEvent.VK_A:
-                    player.setMovement(LEFT, true);
-                    break;
-                case KeyEvent.VK_S:
-                    player.setMovement(DOWN, true);
-                    break;
-                case KeyEvent.VK_D:
-                    player.setMovement(RIGHT, true);
-                    break;
-//            case KeyEvent.VK_E :
-//                player.setState(FIGHT_ATTACK);
-//                break;
-//            case KeyEvent.VK_C:
-//                player.setState(FIGHT_DEALT_DAMAGE);
-//                break;
-//            case KeyEvent.VK_V:
-//                player.setState(FIGHT_RECEIVE_DAMAGE);
-//                break;
-                case KeyEvent.VK_SPACE:
-                    player.setMovement(SPACING, true);
-                    break;
-                case KeyEvent.VK_E:
-                    levelManager.checkNPCInteraction();
-                    break;
-            }
-        }
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !death && !finish) {
-            this.pause = !this.pause;
+        switch (playState) {
+            case PLAY:
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_W:
+                        player.setMovement(UP, true);
+                        break;
+                    case KeyEvent.VK_A:
+                        player.setMovement(LEFT, true);
+                        break;
+                    case KeyEvent.VK_S:
+                        player.setMovement(DOWN, true);
+                        break;
+                    case KeyEvent.VK_D:
+                        player.setMovement(RIGHT, true);
+                        break;
+                    case KeyEvent.VK_SPACE:
+                        player.setMovement(SPACING, true);
+                        break;
+                    case KeyEvent.VK_E:
+                        levelManager.getNowNPCInteractingWith();
+                        break;
+                }
+            case PAUSE:
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    playState = playState == PlayState.PLAY ? PlayState.PAUSE : PlayState.PLAY;
+                }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (!pause && !death && !finish) {
+        if (playState == PlayState.PLAY) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_W:
                     player.setMovement(UP, false);
@@ -216,19 +228,16 @@ public class Playing extends State {
 
     public HUDOverlay getHud() {return hud;}
 
-    public boolean isPause() {
-        return pause;
-    }
     public void unPause() {
-        pause = false;
+        playState = PlayState.PLAY;
     }
     public void playerIsDead() {
-        death = true;
+        playState = PlayState.DEATH;
         game.getAudioPlayer().stopBgMusic();
         game.getAudioPlayer().playSFX(AudioPlayer.GAME_OVER);
     }
     public void gameFinished() {
-        finish = true;
+        playState = PlayState.FINISH;
         game.getAudioPlayer().stopBgMusic();
         game.getAudioPlayer().playSFX(AudioPlayer.DEMO_FINISHED);
     }
