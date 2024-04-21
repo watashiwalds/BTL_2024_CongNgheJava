@@ -1,7 +1,6 @@
 package lsddevgame.main.objects.entities;
 
 import lsddevgame.main.audio.AudioPlayer;
-import lsddevgame.main.gamestates.GameState;
 import lsddevgame.main.managers.LevelManager;
 import lsddevgame.main.utils.ConstantValues;
 import lsddevgame.main.utils.ConstantValues.*;
@@ -76,10 +75,6 @@ public class Player extends Entity {
         if (ConstantValues.GameParameters.HITBOX_DEBUG) this.drawHitbox(g, xLevelOffset, yLevelOffset);
     }
 
-    //a state where player <=0 heart, force gamer to replay the chapter
-    public boolean checkIfAlive() {
-        return (heartCount>0);
-    }
     //handling player movement
     private void updatePosition() {
         xTile = (hitbox.x+(hitbox.width/2))/TILES_SIZE;
@@ -302,5 +297,10 @@ public class Player extends Entity {
         if (dmgReceiveOnCooldown && nowTime - dmgRcvCdStart > dmgRcvCdDuration) {
             dmgReceiveOnCooldown = false;
         }
+    }
+
+    //a state where player <=0 heart, force gamer to replay the chapter
+    public boolean isAlive() {
+        return (heartCount>0);
     }
 }
