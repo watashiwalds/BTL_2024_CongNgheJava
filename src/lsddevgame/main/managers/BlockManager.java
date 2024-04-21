@@ -54,4 +54,8 @@ public class BlockManager {
     public void addBlockEntity(BlockEntity bae) {blockEntities.add(bae);}
 
     public ArrayList<BlockEntity> getBlockEntities() {return blockEntities;}
+
+    public boolean isBlockEntitiesEmpty() {
+        return blockEntities.isEmpty();
+    }
 }

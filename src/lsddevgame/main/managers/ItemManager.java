@@ -58,4 +58,8 @@ public class ItemManager {
     public ArrayList<ItemEntity> getItemEntities() {
         return itemEntities;
     }
+
+    public boolean isItemEntitiesEmpty() {
+        return itemEntities.isEmpty();
+    }
 }
