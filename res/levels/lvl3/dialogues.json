@@ -31,5 +31,8 @@
     ["no9","Up the rope hanging from this cage is a secret tunnel leading to the village sewer. Go and realize\nthe future that we all hope for."],
     ["no9","...and thank you for rescuing me. You gave me hope again."],
     ["player","...meow!"]
+  ],
+  "resetAltarPuzzle": [
+    ["rzaltar","Attempting to reset puzzle to default state.\n[F] to comfirm, [ESC] to cancel."]
   ]
 }

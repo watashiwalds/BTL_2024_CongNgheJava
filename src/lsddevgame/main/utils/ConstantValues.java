@@ -58,7 +58,7 @@ public class ConstantValues {
     }
 
     public static class GameParameters {
-        public static final boolean HITBOX_DEBUG = false;
+        public static final boolean HITBOX_DEBUG = true;
 
         public static final float SCALING = 4f;
         public static final int
@@ -114,6 +114,7 @@ public class ConstantValues {
         public static final int TALK_ONLY = 0;
         public static final int GIVE_ITEM = 1;
         public static final int PLAYER_AFFECT = 2;
+        public static final int WORLD_AFFECT = 3;
     }
 
     public static class LayerLevel {

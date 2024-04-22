@@ -18,6 +18,7 @@ public class NPC extends Entity{
     private int togiveItemID = -1;
     private boolean removeAfterAction = false;
     private String affectType;
+    private String rollbackID;
 
     public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, String actionInText, LevelManager levelManager) {
         super(srcImg, xTile*ConstantValues.GameParameters.TILES_SIZE, yTile*ConstantValues.GameParameters.TILES_SIZE, levelManager);
@@ -32,6 +33,7 @@ public class NPC extends Entity{
     private int defineActionInText(String actionInText) {
         if (actionInText.equalsIgnoreCase("playerAffect")) return ConstantValues.NPCAction.PLAYER_AFFECT;
         if (actionInText.equalsIgnoreCase("giveItem")) return ConstantValues.NPCAction.GIVE_ITEM;
+        if (actionInText.equalsIgnoreCase("worldAffect")) return ConstantValues.NPCAction.WORLD_AFFECT;
         return ConstantValues.NPCAction.TALK_ONLY;
     }
 
@@ -75,7 +77,11 @@ public class NPC extends Entity{
     }
     public int getAction() {return action;}
     public int getTogiveItemID() {return togiveItemID;}
+    public String getRollbackID() {
+        return rollbackID;
+    }
     public boolean needRemoveAfterAction() {return removeAfterAction;}
+
 
     public String getAffectType() {
         return affectType;
@@ -91,5 +97,9 @@ public class NPC extends Entity{
 
     public void setAffectType(String affectType) {
         this.affectType = affectType;
+    }
+
+    public void setRollbackID(String rollbackID) {
+        this.rollbackID = rollbackID;
     }
 }

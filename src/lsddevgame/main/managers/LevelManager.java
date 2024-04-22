@@ -168,10 +168,15 @@ public class LevelManager {
 
                 if (obj.containsKey("removeAfterAction")) placeholder.setRemoveAfterAction((boolean)obj.get("removeAfterAction"));
 
-                if (action.equalsIgnoreCase("playerAffect")) {
+                if (placeholder.getAction() == ConstantValues.NPCAction.PLAYER_AFFECT) {
                     placeholder.setAffectType((String)obj.get("affectType"));
-                } else if (action.equalsIgnoreCase("giveItem")) {
+                } else if (placeholder.getAction() == ConstantValues.NPCAction.GIVE_ITEM) {
                     placeholder.setTogiveItemID((int)(long)obj.get("itemID"));
+                } else if (placeholder.getAction() == ConstantValues.NPCAction.WORLD_AFFECT) {
+                    placeholder.setAffectType((String)obj.get("affectType"));
+                    if (placeholder.getAffectType().equalsIgnoreCase("rollback")) {
+                        placeholder.setRollbackID((String)obj.get("rollbackID"));
+                    }
                 }
 
                 npcManager.addNPC(placeholder);
@@ -317,6 +322,27 @@ public class LevelManager {
         } else
         if (npc.getAction() == ConstantValues.NPCAction.GIVE_ITEM) {
             inventory.putItem(npc.getTogiveItemID());
+        } else
+        if (npc.getAction() == ConstantValues.NPCAction.WORLD_AFFECT) {
+            if (npc.getAffectType().equalsIgnoreCase("rollback")) {
+                RollbackZone rz = rollbackManager.findRolllback(npc.getRollbackID());
+                int k = 0, l = 0;
+                for (int i=rz.getY(); i<rz.getY()+rz.getH(); i++) {
+                    for (int j=rz.getX(); j<rz.getX()+rz.getW(); j++) {
+                        graphicMap[i][j] = rz.getGraphicMap()[k][l];
+                        layerMap[i][j] = rz.getLayerMap()[k][l];
+                        l++;
+                    }
+                    k++;
+                    l=0;
+                }
+                for (int i=0; i<blockManager.getBlockEntities().size(); i++) {
+                    if (blockManager.getBlockEntities().get(i).getXTile() >= rz.getX() && blockManager.getBlockEntities().get(i).getXTile() < rz.getX()+rz.getW() && blockManager.getBlockEntities().get(i).getYTile() >= rz.getY() && blockManager.getBlockEntities().get(i).getYTile() < rz.getY()+rz.getH()) {
+                        blockManager.getBlockEntities().remove(blockManager.getBlockEntities().get(i));
+                    }
+                }
+                for (BlockEntity b : rz.getBlockEntities()) blockManager.addBlockEntity(b);
+            }
         }
         if (npc.needRemoveAfterAction()) {
             npcManager.getNpcs().remove(npc);
