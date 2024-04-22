@@ -17,23 +17,32 @@ public class NPC extends Entity{
     private int action = 0;
     private int togiveItemID = -1;
     private boolean removeAfterAction = false;
+    private String affectType;
 
-    public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, LevelManager levelManager) {
+    public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, String actionInText, LevelManager levelManager) {
         super(srcImg, xTile*ConstantValues.GameParameters.TILES_SIZE, yTile*ConstantValues.GameParameters.TILES_SIZE, levelManager);
         super.hitboxInitialize(1, 1, ConstantValues.GameParameters.TILES_SIZE-2, ConstantValues.GameParameters.TILES_SIZE-2);
         this.id = id;
         this.name = name;
         this.dialogue = dialogue;
+        action = defineActionInText(actionInText);
         keyHint = LoadData.GetSpriteImage(LoadData.KEYCAP_PATH + "key_e.png");
     }
     public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, String actionInText, int itemID, boolean removeAfterAction, LevelManager levelManager) {
-        this(srcImg, xTile, yTile, id, name, dialogue, levelManager);
+        this(srcImg, xTile, yTile, id, name, dialogue, actionInText, levelManager);
         action = defineActionInText(actionInText);
         this.togiveItemID = itemID;
         this.removeAfterAction = removeAfterAction;
     }
+    public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, String actionInText, String affectType, boolean removeAfterAction, LevelManager levelManager) {
+        this(srcImg, xTile, yTile, id, name, dialogue, actionInText, levelManager);
+        action = defineActionInText(actionInText);
+        this.affectType = affectType;
+        this.removeAfterAction = removeAfterAction;
+    }
 
     private int defineActionInText(String actionInText) {
+        if (actionInText.equalsIgnoreCase("playerAffect")) return ConstantValues.NPCAction.PLAYER_AFFECT;
         if (actionInText.equalsIgnoreCase("giveItem")) return ConstantValues.NPCAction.GIVE_ITEM;
         return ConstantValues.NPCAction.TALK_ONLY;
     }
@@ -79,4 +88,8 @@ public class NPC extends Entity{
     public int getAction() {return action;}
     public int getTogiveItemID() {return togiveItemID;}
     public boolean needRemoveAfterAction() {return removeAfterAction;}
+
+    public String getAffectType() {
+        return affectType;
+    }
 }

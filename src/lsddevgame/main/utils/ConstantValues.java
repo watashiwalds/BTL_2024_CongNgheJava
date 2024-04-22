@@ -113,6 +113,7 @@ public class ConstantValues {
     public static class NPCAction {
         public static final int TALK_ONLY = 0;
         public static final int GIVE_ITEM = 1;
+        public static final int PLAYER_AFFECT = 2;
     }
 
     public static class LayerLevel {

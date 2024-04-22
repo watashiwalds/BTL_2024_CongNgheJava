@@ -149,10 +149,12 @@ public class LevelManager {
                 JSONObject obj = (JSONObject) jsarr.get(i);
                 JSONArray arr = (JSONArray) obj.get("cord");
                 String action = (String)obj.get("action");
-                if (action.equalsIgnoreCase("giveItem")) {
+                if (action.equalsIgnoreCase("playerAffect")) {
+                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), action, (String)obj.get("affectType"), (boolean)obj.get("removeAfterAction"),this));
+                } else if (action.equalsIgnoreCase("giveItem")) {
                     npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), action, (int)(long)obj.get("itemID"), (boolean)obj.get("removeAfterAction"), this));
                 } else {
-                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), this));
+                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), action, this));
                 }
             }
         }
@@ -276,6 +278,11 @@ public class LevelManager {
         }
     }
     public void finishNPCInteraction(NPC npc) {
+        if (npc.getAction() == ConstantValues.NPCAction.PLAYER_AFFECT) {
+            if (npc.getAffectType().equalsIgnoreCase("heart_increase")) {
+                gsPlaying.getPlayer().addHeartCount();
+            }
+        } else
         if (npc.getAction() == ConstantValues.NPCAction.GIVE_ITEM) {
             inventory.putItem(npc.getTogiveItemID());
         }
