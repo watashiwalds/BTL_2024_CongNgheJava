@@ -249,5 +249,13 @@
       "itemID": 4,
       "removeAfterAction": true
     }
+  ],
+
+  "rollbackZones": [
+    {
+      "id": "altardome",
+      "cord": [11,52],
+      "size": [9,12]
+    }
   ]
 }

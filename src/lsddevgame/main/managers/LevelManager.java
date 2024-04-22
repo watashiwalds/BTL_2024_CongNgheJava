@@ -4,6 +4,7 @@ import lsddevgame.main.audio.AudioPlayer;
 import lsddevgame.main.gamestates.Playing;
 import lsddevgame.main.mechanics.Dialogue;
 import lsddevgame.main.mechanics.Inventory;
+import lsddevgame.main.mechanics.RollbackZone;
 import lsddevgame.main.objects.entities.BlockEntity;
 import lsddevgame.main.objects.entities.NPC;
 import lsddevgame.main.objects.entities.Player;
@@ -27,10 +28,11 @@ public class LevelManager {
     private int startXIndex, startYIndex;
     private int mapW, mapH, graphicMap[][], layerMap[][];
     private Player player;
-    private BlockManager blockManager;
-    private ItemManager itemManager;
+    private BlockManager blockManager = null;
+    private ItemManager itemManager = null;
     private Inventory inventory;
     private NPCManager npcManager = null;
+    private RollbackManager rollbackManager = null;
 
     public LevelManager(Playing gsPlaying) {
         this.gsPlaying = gsPlaying;
@@ -175,6 +177,19 @@ public class LevelManager {
                 npcManager.addNPC(placeholder);
             }
         }
+
+        //optional rollback zone, primarily for puzzle that can go unsolvable
+        rollbackManager = new RollbackManager(this);
+        if (jsobj.containsKey("rollbackZones")) {
+            jsarr = (JSONArray) jsobj.get("rollbackZones");
+            for (int i=0; i<jsarr.size(); i++) {
+                JSONObject obj = (JSONObject) jsarr.get(i);
+                JSONArray arr1 = (JSONArray) obj.get("cord");
+                JSONArray arr2 = (JSONArray) obj.get("size");
+                RollbackZone placeholder = new RollbackZone((String)obj.get("id"), (int)(long)arr1.get(0), (int)(long)arr1.get(1), (int)(long)arr2.get(0), (int)(long)arr2.get(1), graphicMap, layerMap, blockManager.getBlockEntities());
+                rollbackManager.addRollback(placeholder);
+            }
+        }
     }
 
     public void update() {
@@ -278,7 +293,6 @@ public class LevelManager {
                 if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
             }
         } else {
-            System.out.println("request to use id " + bae.getItemRequiredID() + ". insufficient");
             gsPlaying.getHud().showMessage(bae.getMessage());
         }
     }
