@@ -147,6 +147,6 @@ public class Game implements Runnable {
     }
 
     public void windowLostFocus() {
-        if (GameState.state == GameState.PLAYING) gamePanel.getGame().getGsPlaying().getPlayer().setState(ConstantValues.PlayerConstants.IDLE);
+        if (GameState.state == GameState.PLAYING) gamePanel.getGame().getGsPlaying().getPlayer().resetDirection();
     }
 }

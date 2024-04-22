@@ -20,6 +20,7 @@ public class GameWindow extends JFrame {
         gameWindow.setTitle("Little Cat goes the Knowledge path"); //window's name
         gameWindow.setLocationRelativeTo(null); //spawn middle screen
         gameWindow.setVisible(true);
+        gameWindow.requestFocus();
         gameWindow.addWindowFocusListener(new WindowFocusListener() {
             @Override
             public void windowGainedFocus(WindowEvent e) {

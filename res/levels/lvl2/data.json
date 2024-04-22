@@ -100,7 +100,7 @@
       "cord": [32, 19],
       "itemRequired": 1,
       "action": "appear",
-      "blockIDFollowed": 7,
+      "blockIDToAppear": 7,
       "appearCord": [31, 19],
       "message": "This looks like it can interrupt the stream. If we have a lever somehow..."
     },

@@ -14,6 +14,7 @@ public class Inventory {
 
     public void putItem(int itemID) {
         slots[itemID]++;
+        System.out.println("take id " + itemID);
     }
 
     public int[] getSlots() {

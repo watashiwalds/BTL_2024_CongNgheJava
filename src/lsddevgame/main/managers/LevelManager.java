@@ -137,6 +137,8 @@ public class LevelManager {
                     placeholder.setBlockIDFollowed((int)(long)obj.get("blockIDFollowed"));
                 } else
                 if (action.equalsIgnoreCase("appear")) {
+                    placeholder.setItemRequiredID((int)(long)obj.get("itemRequired"));
+                    placeholder.setBlockIDFollowed((int)(long)obj.get("blockIDToAppear"));
                     JSONArray arr2 = (JSONArray) obj.get("appearCord");
                     placeholder.setActionXMap((int)(long)arr2.get(0));
                     placeholder.setActionYMap((int)(long)arr2.get(1));
@@ -276,6 +278,7 @@ public class LevelManager {
                 if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
             }
         } else {
+            System.out.println("request to use id " + bae.getItemRequiredID() + ". insufficient");
             gsPlaying.getHud().showMessage(bae.getMessage());
         }
     }
