@@ -1,7 +1,7 @@
 package lsddevgame.main.mechanics;
 
 public class Inventory {
-    private int slots[];
+    private int[] slots;
     public Inventory(int itemTypes) {
         slots = new int[itemTypes];
     }
@@ -14,7 +14,6 @@ public class Inventory {
 
     public void putItem(int itemID) {
         slots[itemID]++;
-        System.out.println("take id " + itemID);
     }
 
     public int[] getSlots() {
