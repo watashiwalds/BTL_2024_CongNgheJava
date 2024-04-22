@@ -84,14 +84,10 @@
     },
     {
       "cord": [22,31],
-      "itemRequired" : -1,
-      "action" : "nextLevel",
-      "blockIDFollowed" : -1
+      "action" : "nextLevel"
     },
     {
       "cord": [5,26],
-      "itemRequired" : -1,
-      "blockIDFollowed" : -1,
       "action" : "dialogue",
       "message": "Push [A] to move left, [D] to move right",
       "duration": 5000,
@@ -99,8 +95,6 @@
     },
     {
       "cord": [8,26],
-      "itemRequired" : -1,
-      "blockIDFollowed" : -1,
       "action" : "dialogue",
       "message": "Push [SPACE] to jump. Push again mid-air to double jump",
       "duration": 5000,
@@ -108,8 +102,6 @@
     },
     {
       "cord": [17,26],
-      "itemRequired" : -1,
-      "blockIDFollowed" : -1,
       "action" : "dialogue",
       "message": "Push [W] while at ladder to climb. [A] [D] freely when you want",
       "duration": 5000,
@@ -117,8 +109,6 @@
     },
     {
       "cord": [5,17],
-      "itemRequired" : -1,
-      "blockIDFollowed" : -1,
       "action" : "dialogue",
       "message": "Get on an one-way plaform from under, stay solid on it's top",
       "duration": 5000,
@@ -126,8 +116,6 @@
     },
     {
       "cord": [25,4],
-      "itemRequired" : -1,
-      "blockIDFollowed" : -1,
       "action" : "dialogue",
       "message": "Push [S] + [SPACE] to drop down from an one-way plaform",
       "duration": 5000,

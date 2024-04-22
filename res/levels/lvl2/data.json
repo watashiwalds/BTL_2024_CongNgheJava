@@ -106,14 +106,10 @@
     },
     {
       "cord": [55,9],
-      "itemRequired": -1,
-      "action": "nextLevel",
-      "blockIDFollowed": -1
+      "action": "nextLevel"
     },
     {
       "cord": [15,6],
-      "itemRequired" : -1,
-      "blockIDFollowed" : -1,
       "action" : "dialogue",
       "message": "Water's scary! Don't go near it!",
       "duration": 5000,
