@@ -173,9 +173,11 @@ public class Playing extends State {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            player.resetDirection();
+            playState = playState == PlayState.PLAY ? PlayState.PAUSE : PlayState.PLAY;
+        }
         switch (playState) {
-            case DIALOGUE:
-                dialogueOverlay.keyPressed(e);
             case PLAY:
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_W:
@@ -197,11 +199,9 @@ public class Playing extends State {
                         levelManager.getNowNPCInteractingWith();
                         break;
                 }
-            case PAUSE:
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    player.resetDirection();
-                    playState = playState == PlayState.PLAY ? PlayState.PAUSE : PlayState.PLAY;
-                }
+                break;
+            case DIALOGUE:
+                dialogueOverlay.keyPressed(e);
                 break;
         }
     }
