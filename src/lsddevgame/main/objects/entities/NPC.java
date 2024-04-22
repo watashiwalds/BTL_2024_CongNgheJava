@@ -28,18 +28,6 @@ public class NPC extends Entity{
         action = defineActionInText(actionInText);
         keyHint = LoadData.GetSpriteImage(LoadData.KEYCAP_PATH + "key_e.png");
     }
-    public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, String actionInText, int itemID, boolean removeAfterAction, LevelManager levelManager) {
-        this(srcImg, xTile, yTile, id, name, dialogue, actionInText, levelManager);
-        action = defineActionInText(actionInText);
-        this.togiveItemID = itemID;
-        this.removeAfterAction = removeAfterAction;
-    }
-    public NPC(BufferedImage srcImg, int xTile, int yTile, String id, String name, Dialogue dialogue, String actionInText, String affectType, boolean removeAfterAction, LevelManager levelManager) {
-        this(srcImg, xTile, yTile, id, name, dialogue, actionInText, levelManager);
-        action = defineActionInText(actionInText);
-        this.affectType = affectType;
-        this.removeAfterAction = removeAfterAction;
-    }
 
     private int defineActionInText(String actionInText) {
         if (actionInText.equalsIgnoreCase("playerAffect")) return ConstantValues.NPCAction.PLAYER_AFFECT;
@@ -91,5 +79,17 @@ public class NPC extends Entity{
 
     public String getAffectType() {
         return affectType;
+    }
+
+    public void setTogiveItemID(int togiveItemID) {
+        this.togiveItemID = togiveItemID;
+    }
+
+    public void setRemoveAfterAction(boolean removeAfterAction) {
+        this.removeAfterAction = removeAfterAction;
+    }
+
+    public void setAffectType(String affectType) {
+        this.affectType = affectType;
     }
 }

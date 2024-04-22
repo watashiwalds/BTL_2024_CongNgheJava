@@ -8,42 +8,21 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 public class BlockEntity extends Entity {
-    private int id, itemRequiredID, blockIDFollowed, action;
-    private int xTile, yTile;
+    private int id, xTile, yTile, action;
+    private int itemRequiredID = -1, blockIDFollowed = -1;
     private int actionXMap = -1, actionYMap = -1;
     String message;
     private long messageDuration = 3000;
     private boolean removeAfterAction = true;
-    private int itemIDToGive;
+    private int itemIDToGive = -1;
 
-
-
-    public BlockEntity(int id, int xTile, int yTile, int itemRequiredID, String action, int blockIDFollowed, String message, LevelManager levelManager, BlockManager blockManager) {
+    public BlockEntity(int id, int xTile, int yTile, String action, LevelManager levelManager, BlockManager blockManager) {
         super(blockManager.getBlockSprite(id), xTile*ConstantValues.GameParameters.TILES_SIZE, yTile*ConstantValues.GameParameters.TILES_SIZE, levelManager);
         this.id = id;
         this.xTile = xTile;
         this.yTile = yTile;
-        xCord = xTile*ConstantValues.GameParameters.TILES_SIZE;
-        yCord = yTile*ConstantValues.GameParameters.TILES_SIZE;
-        this.itemRequiredID = itemRequiredID;
         defineAction(action);
-        this.blockIDFollowed = blockIDFollowed;
-        this.message = message;
         super.hitboxInitialize(-ConstantValues.GameParameters.SCALING, -ConstantValues.GameParameters.SCALING, ConstantValues.GameParameters.TILES_SIZE+(2*ConstantValues.GameParameters.SCALING), ConstantValues.GameParameters.TILES_SIZE+(2*ConstantValues.GameParameters.SCALING));
-    }
-    public BlockEntity(int id, int xTile, int yTile, int itemRequiredID, String action, int blockIDFollowed, String message, int actionXMap, int actionYMap, LevelManager levelManager, BlockManager blockManager) {
-        this(id, xTile, yTile, itemRequiredID, action, blockIDFollowed, message, levelManager, blockManager);
-        this.actionXMap = actionXMap;
-        this.actionYMap = actionYMap;
-    }
-    public BlockEntity(int id, int xTile, int yTile, int itemRequiredID, String action, int blockIDFollowed, String message, long duration, boolean removeAfterAction, LevelManager levelManager, BlockManager blockManager) {
-        this(id, xTile, yTile, itemRequiredID, action, blockIDFollowed, message, levelManager, blockManager);
-        this.messageDuration = duration;
-        this.removeAfterAction = removeAfterAction;
-    }
-    public BlockEntity(int id, int xTile, int yTile, int itemRequiredID, String action, int blockIDFollowed, String message, int giveItemID, LevelManager levelManager, BlockManager blockManager) {
-        this(id, xTile, yTile, itemRequiredID, action, blockIDFollowed, message, levelManager, blockManager);
-        this.itemIDToGive = giveItemID;
     }
 
     private void defineAction(String actionInText) {
@@ -99,5 +78,37 @@ public class BlockEntity extends Entity {
 
     public int getItemIDToGive() {
         return itemIDToGive;
+    }
+
+    public void setItemRequiredID(int itemRequiredID) {
+        this.itemRequiredID = itemRequiredID;
+    }
+
+    public void setBlockIDFollowed(int blockIDFollowed) {
+        this.blockIDFollowed = blockIDFollowed;
+    }
+
+    public void setActionXMap(int actionXMap) {
+        this.actionXMap = actionXMap;
+    }
+
+    public void setActionYMap(int actionYMap) {
+        this.actionYMap = actionYMap;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setMessageDuration(long messageDuration) {
+        this.messageDuration = messageDuration;
+    }
+
+    public void setRemoveAfterAction(boolean removeAfterAction) {
+        this.removeAfterAction = removeAfterAction;
+    }
+
+    public void setItemIDToGive(int itemIDToGive) {
+        this.itemIDToGive = itemIDToGive;
     }
 }

@@ -127,17 +127,28 @@ public class LevelManager {
                 int x = (int)(long)arr.get(0);
                 int y = (int)(long)arr.get(1);
                 String action = (String)obj.get("action");
-                String message = (String)obj.get("message");
+                BlockEntity placeholder = new BlockEntity(graphicMap[y][x], x, y, action, this, blockManager);
+
+                if (obj.containsKey("message")) placeholder.setMessage((String)obj.get("message"));
+                if (obj.containsKey("removeAfterAction")) placeholder.setRemoveAfterAction((boolean)obj.get("removeAfterAction"));
+
+                if (action.equalsIgnoreCase("disappear")) {
+                    placeholder.setItemRequiredID((int)(long)obj.get("itemRequired"));
+                    placeholder.setBlockIDFollowed((int)(long)obj.get("blockIDFollowed"));
+                } else
                 if (action.equalsIgnoreCase("appear")) {
                     JSONArray arr2 = (JSONArray) obj.get("appearCord");
-                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (int)(long)arr2.get(0), (int)(long)arr2.get(1), this, blockManager));
-                } else if (action.equalsIgnoreCase("dialogue")) {
-                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (long)obj.get("duration"), (boolean)obj.get("removeAfterAction"), this, blockManager));
-                } else if (action.equalsIgnoreCase("giveItem")) {
-                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, (int)(long)obj.get("giveItemID"), this, blockManager));
-                } else {
-                    blockManager.addBlockEntity(new BlockEntity(graphicMap[y][x], x, y, (int)(long)obj.get("itemRequired"), (String)obj.get("action"), (int)(long)obj.get("blockIDFollowed"), message, this, blockManager));
+                    placeholder.setActionXMap((int)(long)arr2.get(0));
+                    placeholder.setActionYMap((int)(long)arr2.get(1));
+                } else
+                if (action.equalsIgnoreCase("dialogue")) {
+                    placeholder.setMessageDuration((long)obj.get("duration"));
+                } else
+                if (action.equalsIgnoreCase("giveItem")) {
+                    placeholder.setItemIDToGive((int)(long)obj.get("giveItemID"));
                 }
+
+                blockManager.addBlockEntity(placeholder);
             }
         }
 
@@ -149,13 +160,17 @@ public class LevelManager {
                 JSONObject obj = (JSONObject) jsarr.get(i);
                 JSONArray arr = (JSONArray) obj.get("cord");
                 String action = (String)obj.get("action");
+                NPC placeholder = new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), action, this);
+
+                if (obj.containsKey("removeAfterAction")) placeholder.setRemoveAfterAction((boolean)obj.get("removeAfterAction"));
+
                 if (action.equalsIgnoreCase("playerAffect")) {
-                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), action, (String)obj.get("affectType"), (boolean)obj.get("removeAfterAction"),this));
+                    placeholder.setAffectType((String)obj.get("affectType"));
                 } else if (action.equalsIgnoreCase("giveItem")) {
-                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), action, (int)(long)obj.get("itemID"), (boolean)obj.get("removeAfterAction"), this));
-                } else {
-                    npcManager.addNPC(new NPC(LoadData.GetSpriteImage((String) jsobj.get("npcAtlas"), 16, 16, (int) (long) obj.get("spriteID")), (int) (long) arr.get(0), (int) (long) arr.get(1), (String) obj.get("npcID"), (String) obj.get("name"), new Dialogue(levelID, (String) obj.get("dialogueID")), action, this));
+                    placeholder.setTogiveItemID((int)(long)obj.get("itemID"));
                 }
+
+                npcManager.addNPC(placeholder);
             }
         }
     }
