@@ -93,7 +93,7 @@ public class HelperPack {
         return (levelManager.getLayerLevel((int)mapXwoW, (int)mapY) == 2 || levelManager.getLayerLevel((int)mapXwW, (int)mapY) == 2);
     }
     public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, float airSpeed, LevelManager levelManager) {
-        if (!isSolidCheck(hitbox.x+hitbox.width+1, hitbox.y+hitbox.height+1, levelManager))
+        if (!isSolidCheck(hitbox.x+hitbox.width, hitbox.y+hitbox.height+1, levelManager))
             if (!isSolidCheck(hitbox.x, hitbox.y+hitbox.height+1, levelManager))
                 if (!isOnOnewayPlatform(hitbox.x, hitbox.y+hitbox.height+1, levelManager))
                     if (!isOnOnewayPlatform(hitbox.x+hitbox.width, hitbox.y+hitbox.height+1, levelManager))
