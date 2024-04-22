@@ -49,6 +49,7 @@ public class LoadData {
             BufferedImage processtemp = ImageIO.read(is);
             int xIndex = index%(processtemp.getWidth()/width);
             int yIndex = index/(processtemp.getHeight()/height);
+            if (processtemp.getHeight()/height == 1) yIndex = 0;
             toreturn = processtemp.getSubimage(xIndex*width, yIndex*height, width, height);
         } catch (IOException e) {
             throw new RuntimeException(e);
