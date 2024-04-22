@@ -86,7 +86,7 @@ public class DialogueOverlay {
     private void endDialogue() {
         npc.doActionAfterInteraction();
         resetOverlayParameters();
-        gsPlaying.dialogueFinished();
+        gsPlaying.backToPlaying();
     }
 
     private void resetOverlayParameters() {

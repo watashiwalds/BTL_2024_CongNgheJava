@@ -70,6 +70,7 @@ public class PauseOverlay {
                 if (GameState.state == GameState.RESET) {
                     game.playingInitialize();
                     game.getGsPlaying().setGameState(GameState.PLAYING);
+                    game.getGsPlaying().backToPlaying();
                 } else if (GameState.state == GameState.PLAYING) {
                     game.getGsPlaying().unPause();
                 }

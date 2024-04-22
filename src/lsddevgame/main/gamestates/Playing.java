@@ -48,7 +48,6 @@ public class Playing extends State {
         hud = new HUDOverlay();
         dialogueOverlay = new DialogueOverlay(this);
         loadLevel(levelID);
-//        player = new Player(LoadData.PLAYER_ATLAS, levelManager.getStartXIndex()*ConstantValues.GameParameters.TILES_SIZE, levelManager.getStartYIndex()*ConstantValues.GameParameters.TILES_SIZE, levelManager);
     }
 
     public void loadLevel(int levelID) {
@@ -251,7 +250,8 @@ public class Playing extends State {
     public void dialogueStart() {
         playState = PlayState.DIALOGUE;
     }
-    public void dialogueFinished() {
+    public void backToPlaying() {
+        player.resetDirection();
         playState = PlayState.PLAY;
     }
 }
