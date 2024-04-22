@@ -195,7 +195,7 @@ public class Playing extends State {
                         player.setMovement(SPACING, true);
                         break;
                     case KeyEvent.VK_E:
-                        levelManager.getNowNPCInteractingWith();
+                        levelManager.getNowPlayerInteractedWith();
                         break;
                 }
                 break;

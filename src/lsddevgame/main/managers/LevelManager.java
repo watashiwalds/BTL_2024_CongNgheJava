@@ -133,6 +133,7 @@ public class LevelManager {
 
                 if (obj.containsKey("message")) placeholder.setMessage((String)obj.get("message"));
                 if (obj.containsKey("removeAfterAction")) placeholder.setRemoveAfterAction((boolean)obj.get("removeAfterAction"));
+                if (obj.containsKey("id")) placeholder.setId((int)(long)obj.get("id"), blockManager);
 
                 if (action.equalsIgnoreCase("disappear")) {
                     placeholder.setItemRequiredID((int)(long)obj.get("itemRequired"));
@@ -150,6 +151,25 @@ public class LevelManager {
                 } else
                 if (action.equalsIgnoreCase("giveItem")) {
                     placeholder.setItemIDToGive((int)(long)obj.get("giveItemID"));
+                } else
+                if (action.equalsIgnoreCase("weightSensing")) {
+                    placeholder.setPairID((String)obj.get("pairID"));
+                    if (obj.containsKey("havePair")) placeholder.setHavePair(true);
+                    if (obj.containsKey("pairMain")) {
+                        placeholder.setPairMain(true);
+                        placeholder.setAfterActivated((String)obj.get("afterActivated"));
+                        placeholder.setNpcIDAffected((String)obj.get("npcIDAffected"));
+                        placeholder.setBlockIDFollowed((int)(long)obj.get("blockIDFollowed"));
+                        arr = (JSONArray) obj.get("affectedCords");
+                        for (Object o : arr) {
+                            placeholder.addAffectedCord((int)(long)((JSONArray)o).get(0), (int)(long)((JSONArray)o).get(1));
+                        }
+                    }
+                    if (obj.containsKey("blockEntitiesClear")) {
+                        placeholder.setBlockEntitiesClear(true);
+                        arr = (JSONArray) obj.get("clearZone");
+                        placeholder.setClearZone((int)(long)arr.get(0), (int)(long)arr.get(1), (int)(long)arr.get(2), (int)(long)arr.get(3));
+                    }
                 }
 
                 blockManager.addBlockEntity(placeholder);
@@ -307,11 +327,16 @@ public class LevelManager {
         if (iae.getId() == 0) gsPlaying.getPlayer().addHeartCount(); else inventory.putItem(iae.getId());
         itemManager.getItemEntities().remove(iae);
     }
-    public void getNowNPCInteractingWith() {
+    public void getNowPlayerInteractedWith() {
         NPC checkingNPC;
         if ((checkingNPC = npcManager.getInteractedNPC()) != null) {
             checkingNPC.doInteraction();
             gsPlaying.dialogueStart();
+            return;
+        }
+        BlockEntity checkingBAE;
+        if ((checkingBAE = blockManager.getInteractedBlockEntity()) != null) {
+            checkingBAE.doAction();
         }
     }
     public void finishNPCInteraction(NPC npc) {
@@ -339,6 +364,7 @@ public class LevelManager {
                 for (int i=0; i<blockManager.getBlockEntities().size(); i++) {
                     if (blockManager.getBlockEntities().get(i).getXTile() >= rz.getX() && blockManager.getBlockEntities().get(i).getXTile() < rz.getX()+rz.getW() && blockManager.getBlockEntities().get(i).getYTile() >= rz.getY() && blockManager.getBlockEntities().get(i).getYTile() < rz.getY()+rz.getH()) {
                         blockManager.getBlockEntities().remove(blockManager.getBlockEntities().get(i));
+                        i--;
                     }
                 }
                 for (BlockEntity b : rz.getBlockEntities()) blockManager.addBlockEntity(b);
@@ -346,6 +372,66 @@ public class LevelManager {
         }
         if (npc.needRemoveAfterAction()) {
             npcManager.getNpcs().remove(npc);
+        }
+    }
+
+    //serve solely for pushable block
+    public void pushableMoveFromPlace(BlockEntity bae) {
+        if (bae.getAction() == ConstantValues.BlockEntityAction.PUSHABLE) layerMap[bae.getYTile()][bae.getXTile()] = 0;
+    }
+    public void pushableMoveToPlace(BlockEntity bae) {
+        if (bae.getAction() == ConstantValues.BlockEntityAction.PUSHABLE) layerMap[bae.getYTile()][bae.getXTile()] = 1;
+    }
+    public void weightSensingActivated(BlockEntity bae) {
+        if (bae.isPairMain()) {
+            String pairID = bae.getPairID();
+            boolean trulyActivated = true;
+            for (BlockEntity b : blockManager.getBlockEntities()) {
+                if (b.isHavePair() && b.getPairID().equalsIgnoreCase(pairID)) {
+                    trulyActivated = (trulyActivated && b.isBeingPressed());
+                }
+            }
+            if (trulyActivated) {
+                if (bae.getAfterActivated().equalsIgnoreCase("disappear")) {
+                    int blockIDFollowed = bae.getBlockIDFollowed();
+                    for (int i=0; i<bae.affectedCordCount(); i++) {
+                        int xTile = bae.getAffectedCordX(i);
+                        int yTile = bae.getAffectedCordY(i);
+                        graphicMap[yTile][xTile] = 0;
+                        layerMap[yTile][xTile] = 0;
+                        int k = 1;
+                        while (graphicMap[yTile+k][xTile] == blockIDFollowed) {
+                            graphicMap[yTile+k][xTile] = 0;
+                            layerMap[yTile+k][xTile] = 0;
+                            k++;
+                        }
+                        k = 1;
+                        while (graphicMap[yTile-k][xTile] == blockIDFollowed) {
+                            graphicMap[yTile-k][xTile] = 0;
+                            layerMap[yTile-k][xTile] = 0;
+                            k++;
+                        }
+                    }
+                    String npcIDAffected = bae.getNpcIDAffected();
+                    for (int i=0; i<npcManager.getNpcs().size(); i++) {
+                        if (npcManager.getNpcs().get(i).getId().equalsIgnoreCase(npcIDAffected)) {
+                            npcManager.getNpcs().remove(npcManager.getNpcs().get(i));
+                            i--;
+                        }
+                    }
+                    if (bae.isBlockEntitiesClear()) {
+                        for (int i=0; i<blockManager.getBlockEntities().size(); i++) {
+                            BlockEntity b = blockManager.getBlockEntities().get(i);
+                            if (b.getXTile() >= bae.getcZ_x() && b.getXTile() <= bae.getcZ_x()+bae.getcZ_w() && b.getYTile() >= bae.getcZ_y() && b.getYTile() <= bae.getcZ_y()+bae.getcZ_h()) {
+                                System.out.println(graphicMap[b.getYTile()][b.getXTile()] + " " + b.getId());
+                                if (graphicMap[b.getYTile()][b.getXTile()] != b.getId()) graphicMap[b.getYTile()][b.getXTile()] = b.getId();
+                                blockManager.getBlockEntities().remove(b);
+                                i--;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

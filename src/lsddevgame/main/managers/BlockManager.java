@@ -58,4 +58,10 @@ public class BlockManager {
     public boolean isBlockEntitiesEmpty() {
         return blockEntities.isEmpty();
     }
+
+    //now only pushable
+    public BlockEntity getInteractedBlockEntity() {
+        for (BlockEntity bae : blockEntities) if (bae.getAction() == ConstantValues.BlockEntityAction.PUSHABLE && bae.isPlayerTouched()) return bae;
+        return null;
+    }
 }

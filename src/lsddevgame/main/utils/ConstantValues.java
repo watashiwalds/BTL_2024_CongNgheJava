@@ -108,6 +108,8 @@ public class ConstantValues {
         public static final int DIALOGUE = 3;
         public static final int NEXT_LEVEL = 4;
         public static final int GAME_FINISHED = 5;
+        public static final int PUSHABLE = 6;
+        public static final int WEIGHT_SENSING = 7;
     }
 
     public static class NPCAction {

@@ -21,6 +21,7 @@ public class ItemEntity extends Entity {
     }
 
     public void update(Rectangle2D.Float playerHitbox) {
+        super.updateHitbox();
         if (this.hitbox.intersects(playerHitbox)) {
             levelManager.itemPickup(this);
         }
