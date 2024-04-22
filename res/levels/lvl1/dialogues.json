@@ -1,0 +1,10 @@
+{
+  "pickupHeart": [
+    ["heart", "The world mostly is safe, but danger sometimes appear.\nHeart gives you more chance to cover the damage from dangers."],
+    ["heart", "Pick hearts up to increase your heart. It helps in the long run."]
+  ],
+  "pickupItem": [
+    ["item", "Many mechanism required item to use, include gates."],
+    ["item", "Pickup all the items you can see, you might need it later on."]
+  ]
+}

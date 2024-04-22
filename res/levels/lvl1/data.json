@@ -137,14 +137,29 @@
 
   "itemAtlas" : "/levels/lvl1/items.png",
   "itemTypes" : 2,
-  "itemSpawns" : [
+
+  "npcAtlas": "/levels/lvl1/npcs.png",
+  "spriteCount": 2,
+  "npcs": [
     {
-      "id" : 1,
-      "cord" : [22,9]
+      "name": "Tutorial",
+      "npcID": "heart",
+      "cord": [20, 20],
+      "spriteID": 0,
+      "dialogueID": "pickupHeart",
+      "action": "playerAffect",
+      "affectType": "heart_increase",
+      "removeAfterAction": true
     },
     {
-      "id" : 0,
-      "cord" : [20,20]
+      "name": "Tutorial",
+      "npcID": "item",
+      "cord": [22, 9],
+      "spriteID": 1,
+      "dialogueID": "pickupItem",
+      "action": "giveItem",
+      "itemID": 1,
+      "removeAfterAction": true
     }
   ]
 }

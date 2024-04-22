@@ -1,0 +1,35 @@
+{
+  "get3": [
+    ["no3","Thank you, cat! You saved me from that cage! I almost lost hope if you hadn't come to rescue me!"],
+    ["player", "meow?"],
+    ["no3","Oh? You wanna know why I ended up in the cage?"],
+    ["no3","It's The Corp. They have been outraged by the village's resistance to industrial conversion.\nThey imprisoned all those who dared to disobey."],
+    ["no3","My multiple brothers are locked in the rear of the village. We all try to escape, but it is\njust futile without each other."],
+    ["no3","Can you help me free my brothers? We can guide you to the village's sewer. The Corp. hasn't\ntouched it yet so you can sneak in and help the others!"],
+    ["player", "meow!"]
+  ],
+  "get6": [
+    ["no6","Damn this lock, requiring my value, but I myself can't open it!"],
+    ["player", "meow~!"],
+    ["no6","Wow who? Oh, a cat. Go play somewhere else, I'm having important business."],
+    ["no6", "Wait, how can you go in here?"],
+    ["no6","The cage! It opened!? Have you done that?"],
+    ["no6","Oh my, thank you lil' cat, you saved my life!"],
+    ["player","meow."],
+    ["no6","It's the help of 3 and a weird altar? I hope it does no harm to my brother..."],
+    ["no6","You're going to the village, right? I'll go with you. Let's help the others before it's too late."]
+  ],
+  "get9": [
+    ["no9", "Look who's coming—a little energizing cat with a trick to unlock the indestructible cage."],
+    ["no9","I'm too tired to even try. Done so many things with no success, just to be rescued by you."],
+    ["no9","Sorry for the down mood, I'm a bit of a negative person."],
+    ["no9","You have met my brothers, right? We stood up against the Corp. and ended up here."],
+    ["no9","Bet you not believe, we actually have hope for the win. 8 in the village is the one whose potential\ncan overload the brain of the Corp. calculation."],
+    ["no9","He's now being monitored by the Corp. itself in the main building of the ICC Numerical Branch."],
+    ["no9","If we can gather all of the 10 citizens and free him, we can stop this crazy corp once and for all."],
+    ["no9","...within the Numerical Village, I suppose..."],
+    ["no9","Up the rope hanging from this cage is a secret tunnel leading to the village sewer. Go and realize\nthe future that we all hope for."],
+    ["no9","...and thank you for rescuing me. You gave me hope again."],
+    ["player","...meow!"]
+  ]
+}

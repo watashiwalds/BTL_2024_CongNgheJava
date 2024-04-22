@@ -131,14 +131,6 @@
     {
       "id": 1,
       "cord": [41,27]
-    },
-    {
-      "id": 3,
-      "cord": [51,2]
-    },
-    {
-      "id": 4,
-      "cord": [23,23]
     }
   ],
 
@@ -150,9 +142,29 @@
       "npcID": "no0",
       "cord": [7, 30],
       "spriteID": 0,
-      "dialogueID": "dlg1",
+      "dialogueID": "get0",
       "action": "giveItem",
       "itemID": 2,
+      "removeAfterAction": true
+    },
+    {
+      "name": "Number 1",
+      "npcID": "no1",
+      "cord": [51, 2],
+      "spriteID": 1,
+      "dialogueID": "get1",
+      "action": "giveItem",
+      "itemID": 3,
+      "removeAfterAction": true
+    },
+    {
+      "name": "Number 2",
+      "npcID": "no2",
+      "cord": [23, 23],
+      "spriteID": 2,
+      "dialogueID": "get2",
+      "action": "giveItem",
+      "itemID": 4,
       "removeAfterAction": true
     }
   ]

@@ -215,18 +215,41 @@
     {
       "id": 0,
       "cord": [19, 42]
+    }
+  ],
+
+  "npcAtlas": "/levels/lvl3/npcs.png",
+  "spriteCount": 3,
+  "npcs": [
+    {
+      "name": "Number 3",
+      "npcID": "no3",
+      "cord": [22, 35],
+      "spriteID": 0,
+      "dialogueID": "get3",
+      "action": "giveItem",
+      "itemID": 2,
+      "removeAfterAction": true
     },
     {
-      "id": 3,
-      "cord": [27, 52]
+      "name": "Number 6",
+      "npcID": "no6",
+      "cord": [27, 52],
+      "spriteID": 1,
+      "dialogueID": "get6",
+      "action": "giveItem",
+      "itemID": 3,
+      "removeAfterAction": true
     },
     {
-      "id": 2,
-      "cord": [22, 35]
-    },
-    {
-      "id": 4,
-      "cord": [4, 23]
+      "name": "Number 9",
+      "npcID": "no9",
+      "cord": [4, 23],
+      "spriteID": 2,
+      "dialogueID": "get9",
+      "action": "giveItem",
+      "itemID": 4,
+      "removeAfterAction": true
     }
   ]
 }
