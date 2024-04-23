@@ -57,6 +57,7 @@ public class FinishOverlay {
         if (backToMenu.isMouseOver()) {
             backToMenu.applyAction();
             backToMenu.resetValues();
+            game.playingInitialize();
         }
     }
 

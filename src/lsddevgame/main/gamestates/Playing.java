@@ -47,10 +47,11 @@ public class Playing extends State {
         levelManager.setActivePlayer(player);
         hud = new HUDOverlay();
         dialogueOverlay = new DialogueOverlay(this);
-        loadLevel(3);
+        loadLevel(levelID);
     }
 
     public void loadLevel(int levelID) {
+        playState = PlayState.PLAY;
         levelManager.loadLevel(levelID);
         player.loadLevel();
         hud.loadLevel(levelManager.getInventory(), levelManager.getItemManager(), player);
@@ -251,6 +252,7 @@ public class Playing extends State {
         playState = PlayState.DIALOGUE;
     }
     public void backToPlaying() {
+        System.out.println("back to playing, boiz");
         player.resetDirection();
         playState = PlayState.PLAY;
     }
