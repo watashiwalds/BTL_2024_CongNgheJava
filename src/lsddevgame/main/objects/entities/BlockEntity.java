@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class BlockEntity extends Entity {
+public class BlockEntity extends Entity implements Cloneable {
     private int id, xTile, yTile, action;
     private boolean playerTouched = false;
     private int itemRequiredID = -1, blockIDFollowed = -1;
@@ -20,6 +20,18 @@ public class BlockEntity extends Entity {
     private boolean playerTouchLeft = false;
     private boolean havePair = false, beingPressed = false, pairMain = false;
     private String pairID, afterActivated, npcIDAffected;
+
+    @Override
+    public BlockEntity clone() {
+        try {
+            BlockEntity clone = (BlockEntity) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
     private class Cords {
         int x, y;
         public Cords(int x, int y) {
@@ -58,7 +70,9 @@ public class BlockEntity extends Entity {
         if (action == ConstantValues.BlockEntityAction.WEIGHT_SENSING) {
             if (levelManager.getLayerLevel(xTile, yTile) == 1) {
                 beingPressed = true;
-                levelManager.weightSensingActivated(this);
+                if (pairMain) levelManager.weightSensingActivated(this);
+            } else {
+                beingPressed = false;
             }
         }
         if (hitbox.intersects(playerHitbox)) {
@@ -93,7 +107,6 @@ public class BlockEntity extends Entity {
                 levelManager.pushableMoveFromPlace(this);
                 xTile -= 1;
             }
-            System.out.println(levelManager.getMapHeight());
             while (levelManager.getLayerLevel(xTile, yTile+1) != 1) {
                 yTile++;
                 if (yTile+1 >= levelManager.getMapHeight()) break;

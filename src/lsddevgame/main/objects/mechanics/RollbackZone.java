@@ -38,7 +38,7 @@ public class RollbackZone {
     public void loadBAEInZone(ArrayList<BlockEntity> bae) {
         for (BlockEntity b : bae) {
             if (b.getXTile() >= x && b.getXTile() < x+w && b.getYTile() >= y && b.getYTile() < y+h) {
-                this.bae.add(b);
+                this.bae.add(b.clone());
             }
         }
     }

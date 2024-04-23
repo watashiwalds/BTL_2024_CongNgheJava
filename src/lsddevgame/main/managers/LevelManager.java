@@ -367,7 +367,7 @@ public class LevelManager {
                         i--;
                     }
                 }
-                for (BlockEntity b : rz.getBlockEntities()) blockManager.addBlockEntity(b);
+                for (BlockEntity b : rz.getBlockEntities()) blockManager.addBlockEntity(b.clone());
             }
         }
         if (npc.needRemoveAfterAction()) {
@@ -423,7 +423,6 @@ public class LevelManager {
                         for (int i=0; i<blockManager.getBlockEntities().size(); i++) {
                             BlockEntity b = blockManager.getBlockEntities().get(i);
                             if (b.getXTile() >= bae.getcZ_x() && b.getXTile() <= bae.getcZ_x()+bae.getcZ_w() && b.getYTile() >= bae.getcZ_y() && b.getYTile() <= bae.getcZ_y()+bae.getcZ_h()) {
-                                System.out.println(graphicMap[b.getYTile()][b.getXTile()] + " " + b.getId());
                                 if (graphicMap[b.getYTile()][b.getXTile()] != b.getId()) graphicMap[b.getYTile()][b.getXTile()] = b.getId();
                                 blockManager.getBlockEntities().remove(b);
                                 i--;
