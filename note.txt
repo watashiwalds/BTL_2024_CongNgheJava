@@ -1,13 +1,1 @@
-create new type of blockentities:
-    pushable:
-        have sense-hitbox and physical-hitbox for dropping
-        check which side player interacted with
-    weightsense:
-        able to check for pushable and player collision
-        solo / pair with 2 or more
-
-new type of npc:
-    resetpuzzle
-        x, y, w, h of resealable zone
-        levelManager need to store original state of this area
-        remove itself after puzzle solved
+if you have time: save the poor pushable and weight sensing block entities horrendous code colossal please i beg your mercy

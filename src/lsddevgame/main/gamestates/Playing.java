@@ -47,7 +47,7 @@ public class Playing extends State {
         levelManager.setActivePlayer(player);
         hud = new HUDOverlay();
         dialogueOverlay = new DialogueOverlay(this);
-        loadLevel(levelID);
+        loadLevel(3);
     }
 
     public void loadLevel(int levelID) {

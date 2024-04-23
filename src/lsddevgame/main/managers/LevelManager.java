@@ -135,24 +135,25 @@ public class LevelManager {
                 if (obj.containsKey("removeAfterAction")) placeholder.setRemoveAfterAction((boolean)obj.get("removeAfterAction"));
                 if (obj.containsKey("id")) placeholder.setId((int)(long)obj.get("id"), blockManager);
 
-                if (action.equalsIgnoreCase("disappear")) {
+                if (placeholder.getAction() == ConstantValues.BlockEntityAction.DISAPPEAR) {
                     placeholder.setItemRequiredID((int)(long)obj.get("itemRequired"));
                     placeholder.setBlockIDFollowed((int)(long)obj.get("blockIDFollowed"));
                 } else
-                if (action.equalsIgnoreCase("appear")) {
+                if (placeholder.getAction() == ConstantValues.BlockEntityAction.APPEAR) {
                     placeholder.setItemRequiredID((int)(long)obj.get("itemRequired"));
                     placeholder.setBlockIDFollowed((int)(long)obj.get("blockIDToAppear"));
                     JSONArray arr2 = (JSONArray) obj.get("appearCord");
                     placeholder.setActionXMap((int)(long)arr2.get(0));
                     placeholder.setActionYMap((int)(long)arr2.get(1));
                 } else
-                if (action.equalsIgnoreCase("dialogue")) {
+                if (placeholder.getAction() == ConstantValues.BlockEntityAction.DIALOGUE) {
                     placeholder.setMessageDuration((long)obj.get("duration"));
                 } else
-                if (action.equalsIgnoreCase("giveItem")) {
+                if (placeholder.getAction() == ConstantValues.BlockEntityAction.GIVE_ITEM_CONDITION_MET) {
+                    placeholder.setItemRequiredID((int)(long)obj.get("itemRequired"));
                     placeholder.setItemIDToGive((int)(long)obj.get("giveItemID"));
                 } else
-                if (action.equalsIgnoreCase("weightSensing")) {
+                if (placeholder.getAction() == ConstantValues.BlockEntityAction.WEIGHT_SENSING) {
                     placeholder.setPairID((String)obj.get("pairID"));
                     if (obj.containsKey("havePair")) placeholder.setHavePair(true);
                     if (obj.containsKey("pairMain")) {

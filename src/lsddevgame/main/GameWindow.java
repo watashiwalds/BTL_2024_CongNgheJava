@@ -9,8 +9,6 @@ import java.awt.event.WindowFocusListener;
 
 public class GameWindow extends JFrame {
     public GameWindow(GamePanel gamePanel) {
-        System.out.println("this is window.java");
-
         //Create the basic program's window with desired parameters
         JFrame gameWindow = new JFrame();
         gameWindow.setDefaultCloseOperation(EXIT_ON_CLOSE); //press x to close
