@@ -324,7 +324,10 @@ public class LevelManager {
     public void itemPickup(ItemEntity iae) {
         gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.ITEM_PICKUP);
         //id:0 item is heart, affeted player heart count
-        if (iae.getId() == 0) gsPlaying.getPlayer().addHeartCount(); else inventory.putItem(iae.getId());
+        if (iae.getId() == 0)
+            gsPlaying.getPlayer().addHeartCount();
+        else
+            inventory.putItem(iae.getId());
         itemManager.getItemEntities().remove(iae);
     }
     public void getNowPlayerInteractedWith() {
