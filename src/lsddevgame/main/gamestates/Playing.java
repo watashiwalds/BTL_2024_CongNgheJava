@@ -252,7 +252,6 @@ public class Playing extends State {
         playState = PlayState.DIALOGUE;
     }
     public void backToPlaying() {
-        System.out.println("back to playing, boiz");
         player.resetDirection();
         playState = PlayState.PLAY;
     }
