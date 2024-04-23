@@ -32,7 +32,7 @@ public class BlockEntity extends Entity {
     private int cZ_x, cZ_y, cZ_w, cZ_h;
 
     public BlockEntity(int id, int xTile, int yTile, String action, LevelManager levelManager, BlockManager blockManager) {
-        super(blockManager.getBlockSprite(id), xTile*ConstantValues.GameParameters.TILES_SIZE, yTile*ConstantValues.GameParameters.TILES_SIZE, levelManager);
+        super(null, xTile*ConstantValues.GameParameters.TILES_SIZE, yTile*ConstantValues.GameParameters.TILES_SIZE, levelManager);
         this.id = id;
         this.xTile = xTile;
         this.yTile = yTile;
