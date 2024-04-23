@@ -58,7 +58,7 @@ public class ConstantValues {
     }
 
     public static class GameParameters {
-        public static final boolean HITBOX_DEBUG = true;
+        public static final boolean HITBOX_DEBUG = false;
 
         public static final float SCALING = 4f;
         public static final int
