@@ -386,6 +386,7 @@ public class LevelManager {
     public void pushableMoveToPlace(BlockEntity bae) {
         if (bae.getAction() == ConstantValues.BlockEntityAction.PUSHABLE) layerMap[bae.getYTile()][bae.getXTile()] = 1;
     }
+    //serve solely for weightSensing block
     public void weightSensingActivated(BlockEntity bae) {
         if (bae.isPairMain()) {
             String pairID = bae.getPairID();
