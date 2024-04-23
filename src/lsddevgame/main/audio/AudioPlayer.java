@@ -10,11 +10,15 @@ public class AudioPlayer {
     public static final int ITEM_PICKUP = 2;
     public static final int CLIMBING = 3;
     public static final int DOOROPEN = 4;
-    public static final int INWATER = 5;
-    public static final int HURT = 6;
+    public static final int HURT = 5;
 
-    public static final int GAME_OVER = 7;
-    public static final int DEMO_FINISHED = 8;
+    public static final int MEOW = 6;
+    public static final int DIALOGUE_BLIP = 7;
+
+    public static final int SPECIAL_INTERACTION = 8;
+
+    public static final int GAME_OVER = 9;
+    public static final int DEMO_FINISHED = 10;
 
     private Clip[] sfx;
     private Clip bgmusic;
@@ -33,7 +37,7 @@ public class AudioPlayer {
         String bgmusiclinks = "background.wav";
         bgmusic = loadClip(bgmusiclinks);
 
-        String[] sfxlinks = {"ui/button_clicked.wav", "player/jump.wav", "player/itempickup.wav", "player/climb.wav", "player/dooropen.wav", "player/inwater.wav", "player/hurt.wav", "gamestate/failed.wav", "gamestate/finished.wav"};
+        String[] sfxlinks = {"ui/button_clicked.wav", "player/jump.wav", "player/itempickup.wav", "player/climb.wav", "player/dooropen.wav", "player/hurt.wav", "player/meow.wav", "world/dialogueblip.wav", "world/special.wav", "gamestate/failed.wav", "gamestate/finished.wav"};
         sfx = new Clip[sfxlinks.length];
         for (int i=0; i<sfxlinks.length; i++) {
             sfx[i] = loadClip(sfxlinks[i]);

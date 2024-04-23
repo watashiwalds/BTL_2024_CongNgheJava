@@ -101,7 +101,6 @@ public class Player extends Entity {
 
         //get hurt (affect xSpeed so allowed to be in udPos) (hehe)
         if (levelManager.getLayerLevel((int)xTile, (int)yTile) == 4) {
-            audioPlayer.playSFX(AudioPlayer.INWATER);
             xSpeed /= 2f;
             if (!dmgReceiveOnCooldown) {
                 heartCount--;

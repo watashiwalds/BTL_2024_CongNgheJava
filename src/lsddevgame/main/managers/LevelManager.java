@@ -315,6 +315,7 @@ public class LevelManager {
 
             //give item on comdition met
             if (action == ConstantValues.BlockEntityAction.GIVE_ITEM_CONDITION_MET) {
+                gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.SPECIAL_INTERACTION);
                 inventory.putItem(bae.getItemIDToGive());
                 if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
             }
@@ -426,8 +427,10 @@ public class LevelManager {
         } else
         if (npc.getAction() == ConstantValues.NPCAction.GIVE_ITEM) {
             inventory.putItem(npc.getTogiveItemID());
+            gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.ITEM_PICKUP);
         } else
         if (npc.getAction() == ConstantValues.NPCAction.WORLD_AFFECT) {
+            gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.SPECIAL_INTERACTION);
             if (npc.getAffectType().equalsIgnoreCase("rollback")) {
                 RollbackZone rz = rollbackManager.findRolllback(npc.getRollbackID());
                 int k = 0, l = 0;

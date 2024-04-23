@@ -1,5 +1,6 @@
 package lsddevgame.main.ui.playingoverlay;
 
+import lsddevgame.main.audio.AudioPlayer;
 import lsddevgame.main.gamestates.Playing;
 import lsddevgame.main.objects.mechanics.Dialogue;
 import lsddevgame.main.objects.entities.NPC;
@@ -75,12 +76,19 @@ public class DialogueOverlay {
     public void playDialogue(NPC npc) {
         this.npc = npc;
         this.dialogue = npc.getDialogue();
-        nowLine = 0;
+        nextLine();
     }
 
     private void nextLine() {
         nowLine++;
-        if (nowLine >= dialogue.lineCount()) endDialogue();
+        if (nowLine >= dialogue.lineCount()) {
+            endDialogue();
+            return;
+        }
+        if (dialogue.getEntityID(nowLine).equalsIgnoreCase("player"))
+            gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.MEOW);
+        else
+            gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.DIALOGUE_BLIP);
     }
 
     private void endDialogue() {

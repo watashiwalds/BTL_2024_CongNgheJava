@@ -239,13 +239,11 @@ public class Playing extends State {
     }
     public void playerIsDead() {
         playState = PlayState.DEATH;
-        game.getAudioPlayer().stopBgMusic();
-        game.getAudioPlayer().playSFX(AudioPlayer.GAME_OVER);
+        game.getAudioPlayer().playGameOver();
     }
     public void gameFinished() {
         playState = PlayState.FINISH;
-        game.getAudioPlayer().stopBgMusic();
-        game.getAudioPlayer().playSFX(AudioPlayer.DEMO_FINISHED);
+        game.getAudioPlayer().playFinished();
     }
 
     public void dialogueStart() {
