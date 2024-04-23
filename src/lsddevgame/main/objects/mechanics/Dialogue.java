@@ -1,4 +1,4 @@
-package lsddevgame.main.mechanics;
+package lsddevgame.main.objects.mechanics;
 
 import lsddevgame.main.utils.LoadData;
 import org.json.simple.JSONArray;

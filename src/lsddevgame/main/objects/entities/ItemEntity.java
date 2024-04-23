@@ -2,12 +2,10 @@ package lsddevgame.main.objects.entities;
 
 import lsddevgame.main.managers.ItemManager;
 import lsddevgame.main.managers.LevelManager;
-import lsddevgame.main.mechanics.Inventory;
 import lsddevgame.main.utils.ConstantValues;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 
 public class ItemEntity extends Entity {
     private int id;

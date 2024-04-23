@@ -2,9 +2,9 @@ package lsddevgame.main.managers;
 
 import lsddevgame.main.audio.AudioPlayer;
 import lsddevgame.main.gamestates.Playing;
-import lsddevgame.main.mechanics.Dialogue;
-import lsddevgame.main.mechanics.Inventory;
-import lsddevgame.main.mechanics.RollbackZone;
+import lsddevgame.main.objects.mechanics.Dialogue;
+import lsddevgame.main.objects.mechanics.Inventory;
+import lsddevgame.main.objects.mechanics.RollbackZone;
 import lsddevgame.main.objects.entities.BlockEntity;
 import lsddevgame.main.objects.entities.NPC;
 import lsddevgame.main.objects.entities.Player;

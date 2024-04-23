@@ -1,7 +1,7 @@
 package lsddevgame.main.ui.playingoverlay;
 
 import lsddevgame.main.gamestates.Playing;
-import lsddevgame.main.mechanics.Dialogue;
+import lsddevgame.main.objects.mechanics.Dialogue;
 import lsddevgame.main.objects.entities.NPC;
 import lsddevgame.main.utils.ConstantValues;
 import lsddevgame.main.utils.LoadData;

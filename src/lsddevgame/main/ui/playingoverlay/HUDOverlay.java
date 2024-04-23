@@ -1,7 +1,7 @@
 package lsddevgame.main.ui.playingoverlay;
 
 import lsddevgame.main.managers.ItemManager;
-import lsddevgame.main.mechanics.Inventory;
+import lsddevgame.main.objects.mechanics.Inventory;
 import lsddevgame.main.objects.entities.Player;
 import lsddevgame.main.utils.ConstantValues;
 import lsddevgame.main.utils.LoadData;

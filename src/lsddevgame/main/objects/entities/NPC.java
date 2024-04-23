@@ -1,7 +1,7 @@
 package lsddevgame.main.objects.entities;
 
 import lsddevgame.main.managers.LevelManager;
-import lsddevgame.main.mechanics.Dialogue;
+import lsddevgame.main.objects.mechanics.Dialogue;
 import lsddevgame.main.utils.ConstantValues;
 import lsddevgame.main.utils.LoadData;
 

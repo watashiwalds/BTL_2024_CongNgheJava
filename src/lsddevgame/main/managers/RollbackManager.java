@@ -1,6 +1,6 @@
 package lsddevgame.main.managers;
 
-import lsddevgame.main.mechanics.RollbackZone;
+import lsddevgame.main.objects.mechanics.RollbackZone;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package lsddevgame.main.mechanics;
+package lsddevgame.main.objects.mechanics;
 
 public class Inventory {
     private int[] slots;
