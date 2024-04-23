@@ -11,26 +11,27 @@ import java.util.ArrayList;
 public class BlockEntity extends Entity implements Cloneable {
     private int id, xTile, yTile, action;
     private boolean playerTouched = false;
+
+    //if required item to activate, often make local block following
     private int itemRequiredID = -1, blockIDFollowed = -1;
+    //for appear
     private int actionXMap = -1, actionYMap = -1;
+
     String message;
+    //for dialogue
     private long messageDuration = 3000;
+
     private boolean removeAfterAction = true;
+
+    //for giveItem
     private int itemIDToGive = -1;
-    private boolean playerTouchLeft = false;
+
+    //for pushable
+    private int playerTouchSide = 0;
+
+    //for weightSensing
     private boolean havePair = false, beingPressed = false, pairMain = false;
     private String pairID, afterActivated, npcIDAffected;
-
-    @Override
-    public BlockEntity clone() {
-        try {
-            BlockEntity clone = (BlockEntity) super.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
-
     private class Cords {
         int x, y;
         public Cords(int x, int y) {
@@ -41,6 +42,16 @@ public class BlockEntity extends Entity implements Cloneable {
     private ArrayList<Cords> affectedCords = new ArrayList<>();
     private boolean blockEntitiesClear = false;
     private int cZ_x, cZ_y, cZ_w, cZ_h;
+
+    @Override
+    public BlockEntity clone() {
+        try {
+            BlockEntity clone = (BlockEntity) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 
     public BlockEntity(int id, int xTile, int yTile, String action, LevelManager levelManager, BlockManager blockManager) {
         super(null, xTile*ConstantValues.GameParameters.TILES_SIZE, yTile*ConstantValues.GameParameters.TILES_SIZE, levelManager);
@@ -77,12 +88,16 @@ public class BlockEntity extends Entity implements Cloneable {
         if (hitbox.intersects(playerHitbox)) {
             playerTouched = true;
             if (action == ConstantValues.BlockEntityAction.PUSHABLE) {
-                if (hitbox.contains(playerHitbox.x, playerHitbox.y) || hitbox.contains(playerHitbox.x, playerHitbox.y))
-                    playerTouchLeft = false;
-                else playerTouchLeft = true;
+                if (hitbox.contains(playerHitbox.x, playerHitbox.y) && hitbox.contains(playerHitbox.x, playerHitbox.y+playerHitbox.height))
+                    playerTouchSide = ConstantValues.Movement.RIGHT;
+                else
+                if (hitbox.contains(playerHitbox.x+playerHitbox.width, playerHitbox.y) && hitbox.contains(playerHitbox.x+playerHitbox.width, playerHitbox.y+playerHitbox.height))
+                    playerTouchSide = ConstantValues.Movement.LEFT;
+                else
+                    playerTouchSide = 0;
             }
 
-            //only this is needed for all blockEntity. other codes just for pushable
+            //only this is needed for all blockEntity. other codes just for pushable and weightSensing
             levelManager.interactionOnBlockEntity(this);
 
         } else {
@@ -98,11 +113,11 @@ public class BlockEntity extends Entity implements Cloneable {
     //temporarily for pushable block
     public void doAction() {
         if (action == ConstantValues.BlockEntityAction.PUSHABLE) {
-            if (playerTouchLeft && levelManager.getLayerLevel(xTile+1, yTile) != 1) {
+            if (playerTouchSide == ConstantValues.Movement.LEFT && levelManager.getLayerLevel(xTile+1, yTile) != 1) {
                 levelManager.pushableMoveFromPlace(this);
                 xTile += 1;
             } else
-            if (!playerTouchLeft && levelManager.getLayerLevel(xTile-1, yTile) != 1) {
+            if (playerTouchSide == ConstantValues.Movement.RIGHT && levelManager.getLayerLevel(xTile-1, yTile) != 1) {
                 levelManager.pushableMoveFromPlace(this);
                 xTile -= 1;
             }
@@ -190,10 +205,6 @@ public class BlockEntity extends Entity implements Cloneable {
 
     public boolean isPlayerTouched() {
         return playerTouched;
-    }
-
-    public boolean isPlayerTouchLeft() {
-        return playerTouchLeft;
     }
 
     public boolean isHavePair() {
