@@ -156,7 +156,7 @@ public class Player extends Entity {
     private void updateXPos(float xSpeed) {
         if (HelperPack.canCollisionWithCheck(hitbox.x+xSpeed, hitbox.y, hitbox.width, hitbox.height, airSpeed, levelManager)) {
             xCord += xSpeed;
-        } else if (levelManager.getLayerLevel((int)xTile, (int)yTile) < 2) {
+        } else {
             xCord = HelperPack.GetWallNextToEntity(hitbox, xSpeed) - offsetX;
         }
     }
