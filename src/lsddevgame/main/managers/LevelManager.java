@@ -318,6 +318,7 @@ public class LevelManager {
                 inventory.putItem(bae.getItemIDToGive());
                 if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
             }
+            return;
         }
 
         if (action == ConstantValues.BlockEntityAction.WEIGHT_SENSING) {
