@@ -204,6 +204,12 @@
       "action": "gameFinish"
     },
     {
+      "cord": [15,60],
+      "action": "weightSensing",
+      "havePair": true,
+      "pairID": "altardome"
+    },
+    {
       "cord": [14,60],
       "action": "weightSensing",
       "havePair": true,
@@ -215,12 +221,6 @@
       "npcIDAffected": "rzaltar",
       "blockEntitiesClear": true,
       "clearZone": [11,57,9,7]
-    },
-    {
-      "cord": [15,60],
-      "action": "weightSensing",
-      "havePair": true,
-      "pairID": "altardome"
     },
     {
       "cord": [13,57],
