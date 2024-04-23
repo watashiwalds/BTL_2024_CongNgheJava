@@ -283,7 +283,7 @@ public class LevelManager {
                 if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
             } else
 
-            //mechanic-related that active when using item
+            //block appear when using item
             if (action == ConstantValues.BlockEntityAction.APPEAR) {
                 inventory.useItem(bae.getItemRequiredID());
 
@@ -318,77 +318,9 @@ public class LevelManager {
                 inventory.putItem(bae.getItemIDToGive());
                 if (bae.needRemoveAfterAction()) blockManager.getBlockEntities().remove(bae);
             }
-        } else {
-            gsPlaying.getHud().showMessage(bae.getMessage());
         }
-    }
-    public void itemPickup(ItemEntity iae) {
-        gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.ITEM_PICKUP);
-        //id:0 item is heart, affeted player heart count
-        if (iae.getId() == 0)
-            gsPlaying.getPlayer().addHeartCount();
-        else
-            inventory.putItem(iae.getId());
-        itemManager.getItemEntities().remove(iae);
-    }
-    public void getNowPlayerInteractedWith() {
-        NPC checkingNPC;
-        if ((checkingNPC = npcManager.getInteractedNPC()) != null) {
-            checkingNPC.doInteraction();
-            gsPlaying.dialogueStart();
-            return;
-        }
-        BlockEntity checkingBAE;
-        if ((checkingBAE = blockManager.getInteractedBlockEntity()) != null) {
-            checkingBAE.doAction();
-        }
-    }
-    public void finishNPCInteraction(NPC npc) {
-        if (npc.getAction() == ConstantValues.NPCAction.PLAYER_AFFECT) {
-            if (npc.getAffectType().equalsIgnoreCase("heart_increase")) {
-                gsPlaying.getPlayer().addHeartCount();
-            }
-        } else
-        if (npc.getAction() == ConstantValues.NPCAction.GIVE_ITEM) {
-            inventory.putItem(npc.getTogiveItemID());
-        } else
-        if (npc.getAction() == ConstantValues.NPCAction.WORLD_AFFECT) {
-            if (npc.getAffectType().equalsIgnoreCase("rollback")) {
-                RollbackZone rz = rollbackManager.findRolllback(npc.getRollbackID());
-                int k = 0, l = 0;
-                for (int i=rz.getY(); i<rz.getY()+rz.getH(); i++) {
-                    for (int j=rz.getX(); j<rz.getX()+rz.getW(); j++) {
-                        graphicMap[i][j] = rz.getGraphicMap()[k][l];
-                        layerMap[i][j] = rz.getLayerMap()[k][l];
-                        l++;
-                    }
-                    k++;
-                    l=0;
-                }
-                for (int i=0; i<blockManager.getBlockEntities().size(); i++) {
-                    if (blockManager.getBlockEntities().get(i).getXTile() >= rz.getX() && blockManager.getBlockEntities().get(i).getXTile() < rz.getX()+rz.getW() && blockManager.getBlockEntities().get(i).getYTile() >= rz.getY() && blockManager.getBlockEntities().get(i).getYTile() < rz.getY()+rz.getH()) {
-                        blockManager.getBlockEntities().remove(blockManager.getBlockEntities().get(i));
-                        i--;
-                    }
-                }
-                for (BlockEntity b : rz.getBlockEntities()) blockManager.addBlockEntity(b.clone());
-            }
-        }
-        if (npc.needRemoveAfterAction()) {
-            npcManager.getNpcs().remove(npc);
-        }
-    }
 
-    //serve solely for pushable block
-    public void pushableMoveFromPlace(BlockEntity bae) {
-        if (bae.getAction() == ConstantValues.BlockEntityAction.PUSHABLE) layerMap[bae.getYTile()][bae.getXTile()] = 0;
-    }
-    public void pushableMoveToPlace(BlockEntity bae) {
-        if (bae.getAction() == ConstantValues.BlockEntityAction.PUSHABLE) layerMap[bae.getYTile()][bae.getXTile()] = 1;
-    }
-    //serve solely for weightSensing block
-    public void weightSensingActivated(BlockEntity bae) {
-        if (bae.isPairMain()) {
+        if (action == ConstantValues.BlockEntityAction.WEIGHT_SENSING) {
             String pairID = bae.getPairID();
             boolean trulyActivated = true;
             for (BlockEntity b : blockManager.getBlockEntities()) {
@@ -436,6 +368,88 @@ public class LevelManager {
                     }
                 }
             }
+            return;
+        }
+
+        gsPlaying.getHud().showMessage(bae.getMessage());
+    }
+    public void actionOnBlockEntity(BlockEntity bae) {
+        int action = bae.getAction();
+
+        //only pushable required E to active, so for now it is in its own actionOnBlock function
+        if (action == ConstantValues.BlockEntityAction.PUSHABLE) {
+            if (bae.getPlayerTouchSide() == ConstantValues.Movement.LEFT && layerMap[bae.getyTile()][bae.getxTile()+1] != 1) {
+                layerMap[bae.getYTile()][bae.getXTile()] = 0;
+                bae.setxTile(bae.getXTile()+1);
+            } else
+            if (bae.getPlayerTouchSide() == ConstantValues.Movement.RIGHT && layerMap[bae.getyTile()][bae.getxTile()-1] != 1) {
+                layerMap[bae.getYTile()][bae.getXTile()] = 0;
+                bae.setxTile(bae.getXTile()-1);
+            }
+            int y = bae.getYTile();
+            while (layerMap[y+1][bae.getXTile()] != 1) {
+                y++;
+                if (y+1 >= mapH) break;
+            }
+            bae.setyTile(y);
+            layerMap[bae.getYTile()][bae.getXTile()] = 1;
+            bae.updateLocation();
+        }
+    }
+    public void itemPickup(ItemEntity iae) {
+        gsPlaying.getGame().getAudioPlayer().playSFX(AudioPlayer.ITEM_PICKUP);
+        //id:0 item is heart, affeted player heart count
+        if (iae.getId() == 0)
+            gsPlaying.getPlayer().addHeartCount();
+        else
+            inventory.putItem(iae.getId());
+        itemManager.getItemEntities().remove(iae);
+    }
+    public void getNowPlayerInteractedWith() {
+        NPC checkingNPC;
+        if ((checkingNPC = npcManager.getInteractedNPC()) != null) {
+            checkingNPC.doInteraction();
+            gsPlaying.dialogueStart();
+            return;
+        }
+        BlockEntity checkingBAE;
+        if ((checkingBAE = blockManager.getInteractedBlockEntity()) != null) {
+            if (checkingBAE.getAction() == ConstantValues.BlockEntityAction.PUSHABLE) actionOnBlockEntity(checkingBAE);
+        }
+    }
+    public void finishNPCInteraction(NPC npc) {
+        if (npc.getAction() == ConstantValues.NPCAction.PLAYER_AFFECT) {
+            if (npc.getAffectType().equalsIgnoreCase("heart_increase")) {
+                gsPlaying.getPlayer().addHeartCount();
+            }
+        } else
+        if (npc.getAction() == ConstantValues.NPCAction.GIVE_ITEM) {
+            inventory.putItem(npc.getTogiveItemID());
+        } else
+        if (npc.getAction() == ConstantValues.NPCAction.WORLD_AFFECT) {
+            if (npc.getAffectType().equalsIgnoreCase("rollback")) {
+                RollbackZone rz = rollbackManager.findRolllback(npc.getRollbackID());
+                int k = 0, l = 0;
+                for (int i=rz.getY(); i<rz.getY()+rz.getH(); i++) {
+                    for (int j=rz.getX(); j<rz.getX()+rz.getW(); j++) {
+                        graphicMap[i][j] = rz.getGraphicMap()[k][l];
+                        layerMap[i][j] = rz.getLayerMap()[k][l];
+                        l++;
+                    }
+                    k++;
+                    l=0;
+                }
+                for (int i=0; i<blockManager.getBlockEntities().size(); i++) {
+                    if (blockManager.getBlockEntities().get(i).getXTile() >= rz.getX() && blockManager.getBlockEntities().get(i).getXTile() < rz.getX()+rz.getW() && blockManager.getBlockEntities().get(i).getYTile() >= rz.getY() && blockManager.getBlockEntities().get(i).getYTile() < rz.getY()+rz.getH()) {
+                        blockManager.getBlockEntities().remove(blockManager.getBlockEntities().get(i));
+                        i--;
+                    }
+                }
+                for (BlockEntity b : rz.getBlockEntities()) blockManager.addBlockEntity(b.clone());
+            }
+        }
+        if (npc.needRemoveAfterAction()) {
+            npcManager.getNpcs().remove(npc);
         }
     }
 

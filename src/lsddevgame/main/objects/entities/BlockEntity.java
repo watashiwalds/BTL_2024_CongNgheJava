@@ -77,14 +77,17 @@ public class BlockEntity extends Entity implements Cloneable {
     public void update(Rectangle2D.Float playerHitbox) {
         super.updateHitbox();
 
+        //casue weightSensing only need to 'sense' weight, hitbox doest have anything to do with it
         if (action == ConstantValues.BlockEntityAction.WEIGHT_SENSING) {
             if (levelManager.getLayerLevel(xTile, yTile) == 1) {
                 beingPressed = true;
-                if (pairMain) levelManager.weightSensingActivated(this);
+                if (pairMain) levelManager.interactionOnBlockEntity(this);
             } else {
                 beingPressed = false;
             }
+            return;
         }
+
         if (hitbox.intersects(playerHitbox)) {
             playerTouched = true;
             if (action == ConstantValues.BlockEntityAction.PUSHABLE) {
@@ -97,7 +100,7 @@ public class BlockEntity extends Entity implements Cloneable {
                     playerTouchSide = 0;
             }
 
-            //only this is needed for all blockEntity. other codes just for pushable and weightSensing
+            //only this is needed for all blockEntity. other codes just for pushable
             levelManager.interactionOnBlockEntity(this);
 
         } else {
@@ -108,27 +111,6 @@ public class BlockEntity extends Entity implements Cloneable {
     public void draw(Graphics g, int xLevelOffset, int yLevelOffset) {
         g.drawImage(srcImg, (int)(xCord-xLevelOffset), (int)(yCord-yLevelOffset), ConstantValues.GameParameters.TILES_SIZE, ConstantValues.GameParameters.TILES_SIZE, null);
         if (ConstantValues.GameParameters.HITBOX_DEBUG) drawHitbox(g, xLevelOffset, yLevelOffset);
-    }
-
-    //temporarily for pushable block
-    public void doAction() {
-        if (action == ConstantValues.BlockEntityAction.PUSHABLE) {
-            if (playerTouchSide == ConstantValues.Movement.LEFT && levelManager.getLayerLevel(xTile+1, yTile) != 1) {
-                levelManager.pushableMoveFromPlace(this);
-                xTile += 1;
-            } else
-            if (playerTouchSide == ConstantValues.Movement.RIGHT && levelManager.getLayerLevel(xTile-1, yTile) != 1) {
-                levelManager.pushableMoveFromPlace(this);
-                xTile -= 1;
-            }
-            while (levelManager.getLayerLevel(xTile, yTile+1) != 1) {
-                yTile++;
-                if (yTile+1 >= levelManager.getMapHeight()) break;
-            }
-            xCord = xTile*ConstantValues.GameParameters.TILES_SIZE;
-            yCord = yTile*ConstantValues.GameParameters.TILES_SIZE;
-            levelManager.pushableMoveToPlace(this);
-        }
     }
 
     public int getItemRequiredID() {
@@ -293,4 +275,27 @@ public class BlockEntity extends Entity implements Cloneable {
         cZ_w = w;
         cZ_h = h;
     }
+    public int getPlayerTouchSide() {
+        return playerTouchSide;
+    }
+
+    public int getxTile() {
+        return xTile;
+    }
+
+    public int getyTile() {
+        return yTile;
+    }
+
+    public void setxTile(int xTile) {
+        this.xTile = xTile;
+    }
+
+    public void setyTile(int yTile) {
+        this.yTile = yTile;
+    }
+    public void updateLocation() {
+        xCord = xTile*ConstantValues.GameParameters.TILES_SIZE;
+        yCord = yTile*ConstantValues.GameParameters.TILES_SIZE;
+    };
 }
