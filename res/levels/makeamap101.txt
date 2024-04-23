@@ -1,0 +1,130 @@
+[making data.json]
+    indispensable value:
+        playerStartIndex[xTile:int, yTile:int] for player's spawn point at level load
+        mapSize[width:int, height:int] for... map's size
+
+        blockAtlas:String - path from /res to load block sprites
+        blockType:int - how many block kinds are there in the level
+        the blocks when load follows the index shows in .png file of blockAtlas, 0 to blockType, left to right, downward
+
+        graphicMap:int[][] and layerMap:int[][]
+        all have mapSize.height rows and mapSize.width cols
+        details:
+            graphicMap
+                has value between 0(Air) -> blockType
+                uses to define what block sprite will show up in the game
+            layerMap
+                has some value:
+                    0: Air, can collision with
+                    1: Solid, can't
+                    2: Oneway platform, accessible upward and solid on downward, can go through from above
+                    3: Climbable
+                uses to define what kind of block the square is
+        recommending: use table editor like Excel to make the map, convert it to JSONArray using tableconvert . com
+
+    optional:
+        item.
+            itemAtlas:String - path from /res to load item sprites
+            itemType:int - numbers of item types
+            item is ordered by ID by the index shown in atlas. 0 -> itemType-1
+        itemSpawns:object[] - spawn items in map to collect
+            every object consist of:
+                id:int - item's ID to spawn
+                cord[xTile:int, yTile:int] - where to spawn in map
+
+        interactiveBlocks:object[]
+        what bEntity action need what? (common needs + type needs)
+            common needs:
+                cord[xTile:int, yTile:int] - where it is located in the map
+                action:String - according to what type you aim to make, equalIgnoreCase with the type title
+                message:String - alert player when interacting w/o condition met or just to inform them
+
+            values at default:
+                removeAfterAction = true - self-destruct after activated if else stated with removeAfterAction:boolean
+
+            gameFinish - mark the finishing point of THE GAME
+            no additional needs
+
+            nextLevel - mark the transition to the next level
+            no additional needs
+
+            disappear - make the block disappear
+                itemRequired:int - required item's ID to activate (can't go -1)
+                blockIDFollowed:int - what nearby blockID will disappear with this on activating (-1 for none)
+            notice: disappeared block is replaced with air, vertical only (as seen on default level)
+
+            appear - make designated block appear
+                itemRequired:int - required item's ID to activate (can't go -1)
+                blockIDToAppear:int - make sure it's a solid block, it's hard-coded
+                appearCord[xTile:int, yTile:int] - the cord to place appeared block
+            notice: block appear in a non-0 graphicMap cord will lead to a vertical erase of that previous block type at appearCord (as seen on level2)
+
+            dialogue - only show message with custom duration
+                duration:long - message duration in ms
+
+            giveItem - give out item when having specific item in inventory
+                itemRequired:int - required item's ID to activate (can't go -1)
+                giveItemID:int - item's ID to give when activated
+
+            pushable - a pushable block, solid, works with weighSensing
+                id:int - block's ID graphic to take form
+            notice: only go left/right, affected by gravity only to solid block (layer = 1)
+
+            weightSensing - sense weight, active if being weighted
+                1 pair collection need at least 1 pairMain, placed behind all others paired weightSensing
+                for non-main:
+                    havePair:boolean - true (because it is in a pair)
+                    pairID:String - same with the pairMain one
+                for main:
+                    havePair:boolean - true if in a pair or false if not (going solo)
+                    pairID:String - same with collection
+                    pairMain:boolean = true
+                    afterActivated:String - affect type when activated. for now, disappear is the only choice
+                    if (disappear):
+                        blockIDFollowed:int - block's id to be disappearing with
+                        affectedCords:array[array[xTile:int][yTile:int]] - all cord in map to be erased with, followed vertically by blockIDFollowed
+                        npcIDAffected:String - npc to be disappearing with (this often come with rollback npc, might be optional later)
+                        blockEntitiesClear:boolean - does block entities in define area need to be erased all when activated?
+                        if (clearbEntities):
+                            clearZone[xTile:int, yTile:int, width:int, height:int] - define zone to clear block entities
+            notice: made poorly to adapt puzzle in default level3, if you want to do something similar, use this. else use with caution
+
+        npc.
+            npcAtlas:String - path from /res to load npc sprites
+            spriteCount:int - number of npc sprites in atlas
+        npcs:object[]
+        what npc action need what? (common needs + type needs)
+            common needs:
+                name:String - npc name to show in dialigue
+                npcID:String - npc define ID
+                cord[xTile:int, yTile:int] - where to spawn npc in the map
+                spriteID:int - sprite of the npc
+                dialogueid:String - npc's dialogue when interacted (can't be null, related to dialogues.json)
+                action:String - type of action npc would ignite when finish talking to
+
+            values at default:
+                removeAfterAction = false - a all-talk and no-affect npc would not be terminated after talking
+
+            giveItem - give item to the player
+                itemID:int - item ID to give after activation
+
+            worldAffect - make change to map
+                affectType:String
+                in this version, only rollback affectType is valid
+                    rollbackID:String - rollback the area that ID is holding
+
+        rollbackZones:object[]
+            each object consist of
+                id:String - zone's id
+                cord[xTile:int, yTile:int] - top-left anchor of the rollback area
+                size[width:int, height:int] - size of the zone, expand from cord
+
+[making dialogue.json]
+the name can't change
+    is an array of object contain array of pair value entityID:String, line:String
+    for an object:
+        String - the dialogue id
+        array:
+            String,String - entityID,line
+            array long as you like
+    notice: only igniting dialogue npcID and "player" are allowed in entityID. Expansion may be implemented in future
